@@ -1,0 +1,68 @@
+div ul li a i {
+    font-size: 18px;
+    margin-right: 1rem;
+}
+
+div ul li a {
+    margin-bottom: 0.5rem;
+}
+
+div ul li a.active {
+    font-weight: 600;
+    background-color: rgba(0, 176, 116, 0.15);
+    color: #00B074 !important;
+}
+
+.nav:last-child li {
+    width: 2.3rem;
+    height: 2.3rem;
+    margin-bottom: 0.5rem;
+    background-color: rgba(45, 156, 219, 0.15);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.nav:last-child li i {
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bx-comment-dots,
+.bx-bell {
+    color: #2D9CDB;
+}
+
+.bx-gift {
+    color: #5E6C93;
+}
+
+.bx-cog {
+    color: #FF5B5B;
+}
+
+.nav:last-child li span {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    background-color: #2D9CDB;
+    top: 0;
+    right: 0;
+    transform: translate(40%, -40%);
+    font-size: 8px;
+    text-align: center;
+    color: white;
+    border-radius: 100%;
+    border: 3px solid #F3F2F7;
+}
+
+.nav:last-child li:nth-child(3) span {
+    background-color: #5E6C93;
+}
+
+.nav:last-child li:last-child span {
+    background-color: #FF5B5B;
+}

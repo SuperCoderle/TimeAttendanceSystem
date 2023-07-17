@@ -1,0 +1,46 @@
+<div class="body bg-white">
+    <div class="title border-bottom d-flex justify-content-between align-items-center">
+        <h4 class="m-1">Lịch làm việc</h4>
+    </div>
+
+    <div class="d-flex btn-options mt-3">
+        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="add" class="d-flex align-items-center">
+            Thay đổi
+            <span nz-icon nzType="caret-down" nzTheme="outline"></span>
+        </button>
+        <nz-dropdown-menu #add="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item>Ca làm việc</li>
+                <li nz-menu-item>Chi tiết ca</li>
+                <li nz-menu-item>menu1 3rd menu item</li>
+            </ul>
+        </nz-dropdown-menu>
+    </div>
+    <nz-calendar>
+        <ul *nzDateCell="let date" class="events">
+            <ng-container [ngSwitch]="date.getDate()">
+                <!-- <ng-container *ngSwitchCase="8">
+                <li *ngFor="let item of listDataMap.eight">
+                    <nz-badge [nzStatus]="item.type" [nzText]="item.content"></nz-badge>
+                </li>
+            </ng-container>
+            <ng-container *ngSwitchCase="10">
+                <li *ngFor="let item of listDataMap.ten">
+                    <nz-badge [nzStatus]="item.type" [nzText]="item.content"></nz-badge>
+                </li>
+            </ng-container>
+            <ng-container *ngSwitchCase="11">
+                <li *ngFor="let item of listDataMap.eleven">
+                    <nz-badge [nzStatus]="item.type" [nzText]="item.content"></nz-badge>
+                </li>
+            </ng-container> -->
+            </ng-container>
+        </ul>
+        <ng-container *nzMonthCell="let month">
+            <div *ngIf="getMonthData(month) as monthData" class="notes-month">
+                <section>{{ monthData }}</section>
+                <span>Backlog number</span>
+            </div>
+        </ng-container>
+    </nz-calendar>
+</div>

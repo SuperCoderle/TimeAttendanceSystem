@@ -1,0 +1,46 @@
+.view .view-btn {
+    right: 0%;
+    top: 10%;
+    transform: translate(0%, -44%);
+}
+
+.view .view-btn button {
+    background: white;
+    border: 1px solid rgba(9, 9, 9, 0.159);
+    padding: 0.4rem;
+    margin: 1px;
+    width: 6rem;
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 999;
+}
+
+.view .view-btn button.active {
+    color: #1890ff;
+}
+
+button {
+    margin: 0 8px 8px 0;
+    border: none;
+}
+
+td button {
+    background: transparent;
+}
+
+.menu li:hover {
+    background: transparent;
+}
+
+.menu {
+    transform: translateX(-25%);
+}
+
+.btn-options button:nth-child(2) {
+    background-color: rgba(102, 131, 13, 0.816);
+}
+
+.btn-options button:nth-child(2):hover {
+    background-color: rgba(102, 131, 13, 0.614);
+}

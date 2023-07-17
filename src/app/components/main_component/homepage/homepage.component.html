@@ -1,0 +1,10 @@
+<app-loading *ngIf="token == null"></app-loading>
+<section class="d-flex" *ngIf="token != null">
+    <app-sidebar></app-sidebar>
+
+    <nav class="w-100 pb-3">
+        <app-top></app-top>
+        
+        <router-outlet></router-outlet>
+    </nav>
+</section>

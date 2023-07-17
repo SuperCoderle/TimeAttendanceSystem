@@ -1,0 +1,40 @@
+header {
+    padding: 2rem 2rem 0;
+}
+
+.bx-search {
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    margin-right: 1rem;
+    font-size: 20px;
+}
+
+input::placeholder,
+.bx-search {
+    color: #969BA0;
+}
+
+header div .user {
+    border-left: 1px solid #D0D6DE;
+    padding-left: 1.5rem;
+}
+
+header div .user p span {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+header div .user p {
+    color: #464255;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.breadcrumb {
+    padding: 1.4rem 2rem;
+}

@@ -1,0 +1,129 @@
+h1 {
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    font-family: monospace, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: #444;
+}
+
+.img-div {
+    width: 80vw;
+    margin-top: 20%;
+    margin-left: 10%;
+}
+
+img {
+    max-width: 100%;
+}
+
+.text-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 25px;
+}
+
+.text-div h2 {
+    color: #333;
+    font-size: 48px;
+    line-height: 70px;
+    letter-spacing: -3.5%;
+    font-family: monospace;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-right: auto;
+}
+
+.text-div p {
+    color: #4f4f4f;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: -3.5%;
+    font-family: monospace;
+    font-weight: 400;
+    margin-top: 25px;
+}
+
+.text-div input {
+    margin-top: 25px;
+    width: 210px;
+    height: 60px;
+    background: #333;
+    color: #fff;
+    outline: none;
+    border: none;
+    text-transform: uppercase;
+    font-family: monospace;
+    margin-right: auto;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+footer {
+    display: flex;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+footer p {
+    margin: auto;
+    color: #333;
+    font-family: monospace;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: -3.5%;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 850px) and (min-width: 650px) {
+    h1 {
+        font-size: 25px;
+    }
+
+    .img-div {
+        margin-top: 10%;
+    }
+
+    .text-div {
+        margin-left: 90px;
+    }
+
+    .text-div p {
+        margin-right: auto;
+        width: 400px;
+    }
+}
+
+@media screen and (min-width: 852px) {
+    h1 {
+        font-size: 35px;
+    }
+
+    .disk-div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 90vh;
+    }
+
+    .img-div {
+        width: 40vw;
+        height: auto;
+        margin-top: 2%;
+        margin-left: 2%;
+    }
+
+    .text-div {
+        margin-left: 90px;
+    }
+
+    footer {
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+}
