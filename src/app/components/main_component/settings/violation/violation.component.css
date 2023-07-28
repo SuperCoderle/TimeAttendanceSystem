@@ -1,0 +1,24 @@
+button {
+    margin: 0 8px 8px 0;
+    border: none;
+}
+
+.menu li:hover {
+    background: transparent;
+}
+
+.menu {
+    transform: translateX(-25%);
+}
+
+.btn-options button:nth-child(2) {
+    background-color: rgba(102, 131, 13, 0.816);
+}
+
+.btn-options button:nth-child(2):hover {
+    background-color: rgba(102, 131, 13, 0.614);
+}
+
+.save {
+    margin-right: 8px;
+  }

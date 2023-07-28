@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { MessageService } from 'primeng/api'
 import { Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -18,23 +19,26 @@ export class LoginComponent {
   loading: boolean = false;
   message: string = '';
 
-  Email: string = '';
-  Password: string = '';
+  form = this.formBuilder.group({
+    email: ['',[Validators.email, Validators.required] ],
+    password: ['', Validators.required]
+  })
 
   //Constructor
-  constructor(private userService: UserService, private messageService: MessageService, private router: Router) { }
+  constructor(private userService: UserService, private messageService: MessageService, private router: Router, private formBuilder:FormBuilder) { }
 
   //Methods
   async handleLogin() {
     this.loading = true;
     this.message = '';
-    await this.userService.Verify(this.Email, this.Password)
+    await this.userService.Login(this.form.controls["email"].value, this.form.controls["password"].value)
       .subscribe({
         next: (result) => {
           setTimeout(() => {
             this.loading = false;
             window.localStorage.setItem("token", <any>result.token);
             this.router.navigate(['home']);
+            console.log(result.token); 
           }, 1000);
         },
         error: (error) => {

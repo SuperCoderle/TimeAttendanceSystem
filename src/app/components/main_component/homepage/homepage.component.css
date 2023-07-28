@@ -1,0 +1,48 @@
+.sidebar {
+    transition: all 0.5s ease;
+}
+
+@media screen and (max-width: 480px) {
+    .menu-mobile {
+        padding: 0.5rem !important;
+    }
+
+    .sidebar {
+        transform: translateX(-999px);
+        position: absolute;
+        z-index: 999;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .menu-mobile {
+        display: block !important;
+    }
+
+    .menu-mobile button {
+        padding: 0;
+        background: transparent;
+        transition: all 0.5s ease;
+    }
+
+    .menu-mobile button:focus {
+        color: unset;
+    }
+
+    .menu-mobile button.active {
+        rotate: -360;
+        transform: translateX(300px);
+    }
+    
+    .menu-mobile button span {
+        font-size: 24px;
+    }
+}
+
+.menu-mobile {
+    display: none;
+    padding: 0.5rem 2rem;
+}
+

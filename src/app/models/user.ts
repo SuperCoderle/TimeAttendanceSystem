@@ -1,6 +1,12 @@
 export interface User {
-    idUser?: string;
-    username: string;
-    password: string;
-    idEmployee: number;
+    userID: String;
+    fullname?: string;
+    email: String;
+    password: String;
+    employeeID?: String | null;
+    lastLoggedIn: Date | null;
+    createdAt: Date;
+    lastUpdatedAt: Date | null;
+    isManager: boolean;
+    isActive: boolean;
 }

@@ -1,26 +1,51 @@
-<div class="d-flex flex-column justify-content-center align-items-center bg-white h-100" style="width: 280px;">
+<div class="d-flex flex-column justify-content-center align-items-center bg-white h-100">
     <a href="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis justify-content-center text-decoration-none">
-        <img width="40%" src="../../../../assets/image/logo_exam.png" alt="" />
+        <img class="logo" src="../../../../assets/image/logo_exam.png" alt="" />
     </a>
-    <p class="m-0">Trang admin quản lý chấm công</p>
-    <ul style="width: 80%;" nz-menu nzMode="inline" class="nav nav-pills flex-column mb-auto mt-4">
-        <li class="nav-item" *ngFor="let item of menu" nz-submenu [nzTitle]="item.title" [nzIcon]="item.icon"
-            (click)="handleRoute(item.title)">
-            <ul *ngIf="item.title == 'Nhân viên'">
-                <li nz-menu-item>
-                    <a [routerLink]="item.url">Overview</a>
-                </li>
-                <li nz-menu-item>
-                    <a routerLink="employee/salary">Lịch sử chấm công</a>
-                </li>
-                <li nz-menu-item>Tiền lương</li>
+    <p class="title m-0">Trang admin quản lý chấm công</p>
+    <ul nzMode="inline" nz-menu [nzInlineCollapsed]="width > 480 && width <= 1024 ? true : false"
+        class="nav nav-pills flex-column mb-auto mt-4">
+        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['dashboard']">
+            <span nz-icon nzType="home" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">Dashboard</span>
+        </li>
+        <li class="nav-item align-items-center w-100" nz-submenu nzTitle="Nhân viên" nzIcon="team">
+            <ul *ngIf="isAdmin()">
+                <li nz-menu-item routerLink="employee">Overview</li>
+                <li nz-menu-item routerLink="employee/salary">Lịch sử chấm công</li>
+                <li nz-menu-item routerLink="employee/salary">Tiền lương</li>
+                <li nz-menu-item routerLink="employee/regshift">Đăng ký ca</li>
                 <li nz-menu-item *ngIf="user.role == 'Administrator'">Báo cáo</li>
+            </ul>
+
+            <ul *ngIf="!isAdmin()">
+                <li nz-menu-item routerLink="employee">Overview</li>
+                <li nz-menu-item routerLink="employee/salary">Lịch sử chấm công</li>
+                <li nz-menu-item routerLink="employee/salary">Tiền lương</li>
+                <li nz-menu-item routerLink="employee/regshift">Đăng ký ca</li>
+            </ul>
+        </li>
+        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['calendar']">
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">Lịch làm việc</span>
+        </li>
+        <li class="nav-item align-items-center w-100" *ngIf="isAdmin()" nz-menu-item
+            [routerLink]="['analytic']">
+            <span nz-icon nzType="stock" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">Báo cáo</span>
+        </li>
+        <li class="nav-item align-items-center w-100" nz-submenu nzTitle="Cài đặt" nzIcon="setting">
+            <ul>
+                <li nz-menu-item routerLink="settings/authority">Quản lý phân quyền</li>
+                <li nz-menu-item routerLink="settings/violation">Quản lý vi phạm</li>
+                <li nz-menu-item routerLink="settings/menu">Quản lý menu</li>
+                <li nz-menu-item routerLink="settings/payroll">Quản lý bảng lương</li>
             </ul>
         </li>
     </ul>
 
-    <ul class="nav nav-pills nav-flush flex-column mt-auto px-3 w-100">
+    <!-- <ul class="nav nav-pills nav-flush flex-column mt-auto px-3 w-100">
         <li class="nav-item">
             <i class='bx bx-comment-dots'></i>
             <span>53</span>
@@ -37,5 +62,5 @@
             <i class='bx bx-cog'></i>
             <span>19</span>
         </li>
-    </ul>
+    </ul> -->
 </div>

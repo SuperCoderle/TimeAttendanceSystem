@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EmployeeComponent } from './components/main_component/employee_space/employee/employee.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/main_component/login/login.component';
 import { HeaderComponent } from './components/main_component/header/header.component';
 import { HomepageComponent } from './components/main_component/homepage/homepage.component';
@@ -18,7 +18,6 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
-
 
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
@@ -96,12 +95,25 @@ import { NzCronExpressionModule } from 'ng-zorro-antd/cron-expression';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
 import { HistoryComponent } from './components/main_component/history/history.component';
-import { CalendarComponent } from './components/main_component/calendar/calendar.component';
+import { CalendarComponent } from './components/main_component/work_schedule/calendar/calendar.component';
 import { SalaryComponent } from './components/main_component/employee_space/salary/salary.component';
 import { OverviewComponent } from './components/main_component/employee_space/overview/overview.component';
 import { LoadingComponent } from './components/main_component/loading/loading.component';
+import { NotfoundComponent } from './components/main_component/errors/notfound/notfound.component';
+import { ForbiddenComponent } from './components/main_component/errors/forbidden/forbidden.component';
+import { FormComponent } from './components/main_component/employee_space/form/form.component';
+import { RegisterShiftComponent } from './components/main_component/employee_space/register-shift/register-shift.component';
+import { AuthorityComponent } from './components/main_component/settings/authority/authority.component';
+import { StaffCalendarComponent } from './components/main_component/work_schedule/staff-calendar/staff-calendar.component';
+import { EmployeeService } from './services/employee/employee.service';
+import { ViolationComponent } from './components/main_component/settings/violation/violation.component';
+import { PayrollComponent } from './components/main_component/settings/payroll/payroll.component';
 
 registerLocaleData(vi);
+
+export function tokenGetter() {
+  return localStorage.getItem("access_token");
+}
 
 @NgModule({
   declarations: [
@@ -118,12 +130,21 @@ registerLocaleData(vi);
     SalaryComponent,
     OverviewComponent,
     LoadingComponent,
+    NotfoundComponent,
+    ForbiddenComponent,
+    FormComponent,
+    RegisterShiftComponent,
+    AuthorityComponent,
+    StaffCalendarComponent,
+    ViolationComponent,
+    PayrollComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastModule,
     NzAffixModule,
@@ -203,7 +224,12 @@ registerLocaleData(vi);
     NzWaterMarkModule,
   ],
   providers: [
-    { provide: NZ_I18N, useValue: vi_VN }
+    { provide: NZ_I18N, useValue: vi_VN },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: EmployeeService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

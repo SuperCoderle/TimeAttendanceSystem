@@ -1,8 +1,20 @@
-<app-loading *ngIf="token == null"></app-loading>
+<app-notfound *ngIf="token == null"></app-notfound>
 <section class="d-flex" *ngIf="token != null">
-    <app-sidebar></app-sidebar>
+    <app-sidebar 
+        class="sidebar h-100" [ngClass]="isActive ? 'active' : null"
+        [ngStyle]="{'width': sidebarWidth}"
+    ></app-sidebar>
 
     <nav class="w-100 pb-3">
+        <div class="menu-mobile">
+            <button 
+                class="border-0" [ngClass]="isActive ? 'active' : null" 
+                nz-button (click)="handleClick()"
+                [ngStyle]="{'transform': 'translateX(' + translateMenu + ')'}"
+                >
+                <span nz-icon nzType="menu-unfold" nzTheme="outline"></span>
+            </button>
+        </div>
         <app-top></app-top>
         
         <router-outlet></router-outlet>

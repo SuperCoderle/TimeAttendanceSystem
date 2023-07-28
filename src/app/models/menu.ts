@@ -1,40 +1,10 @@
-export var MenuAdmin = [
-    {
-        icon: 'home',
-        title: 'Dashboard',
-        url: 'dashboard'
-    },
-    {
-        icon: 'team',
-        title: 'Nhân viên',
-        url: 'employee'
-    },
-    {
-        icon: 'calendar',
-        title: 'Lịch làm việc',
-        url: 'calendar'
-    },
-    {
-        icon: 'deployment-unit',
-        title: 'Quản lý phân quyền',
-        url: 'authority'
-    }
-]
-
-export var MenuEmployee = [
-    {
-        icon: 'home',
-        title: 'Trang chủ',
-        url: ''
-    },
-    {
-        icon: 'team',
-        title: 'Nhân viên',
-        url: `employee`
-    },
-    {
-        icon: 'calendar',
-        title: 'Lịch làm việc',
-        url: 'calendar'
-    }
-]
+export interface Menu {
+    menuID: String,
+    title: String,
+    tooltip?: string,
+    url: String,
+    isActive: boolean,
+    createdAt: Date,
+    lastUpdatedAt: Date,
+    lastUpdatedBy: String
+}

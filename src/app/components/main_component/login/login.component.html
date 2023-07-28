@@ -13,7 +13,7 @@
     </div>
 
     <div class="position-absolute form-login">
-        <form (ngSubmit)="handleLogin()">
+        <form (ngSubmit)="handleLogin()" [formGroup]="form">
             <div class="round rounded-5 position-absolute bg-white">
                 <div class="bg-danger rounded-5 position-absolute"></div>
             </div>
@@ -21,13 +21,13 @@
             <p class="text-center mb-4 subtext">Login with your details</p>
             <div class="mb-4 position-relative">
                 <i class='bx bxs-user position-absolute'></i>
-                <input type="email" class="form-control rounded-5" id="email" placeholder="Email" name="email" required
-                    [(ngModel)]="Email">
+                <input type="email" class="form-control rounded-5" id="email" placeholder="Email" 
+                     formControlName="email">
             </div>
             <div class="mb-3 position-relative">
                 <i class='bx bxs-lock-alt position-absolute' ></i>
-                <input [type]="show ? 'text' : 'password'" class="form-control rounded-5" id="password" required="true"
-                    placeholder="Password" name="password" [(ngModel)]="Password">
+                <input [type]="show ? 'text' : 'password'" class="form-control rounded-5" id="password" placeholder="Password" 
+                    formControlName="password">
                 <i *ngIf="!show" (click)="show = true" class="bi bi-eye-slash"></i>
                 <i *ngIf="show" (click)="show = false" class="bi bi-eye"></i>
             </div>
@@ -45,7 +45,7 @@
                 </div>
                 <a href="#" class="text-danger">Forgot password?</a>
             </div>
-            <button type="submit" class="mb-4 btn btn-primary w-100 bg-dark rounded-5 p-2">Login</button>
+            <button type="submit" class="mb-4 btn btn-primary w-100 bg-dark rounded-5 p-2" [disabled]="!form.valid">Login</button>
         </form>
     </div>
 </div>

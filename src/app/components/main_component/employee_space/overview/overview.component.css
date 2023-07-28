@@ -1,7 +1,7 @@
 .view .view-btn {
     right: 0%;
     top: 10%;
-    transform: translate(0%, -44%);
+    transform: translate(0%, -54%);
 }
 
 .view .view-btn button {
@@ -43,4 +43,9 @@ td button {
 
 .btn-options button:nth-child(2):hover {
     background-color: rgba(102, 131, 13, 0.614);
+}
+
+td span, i {
+    font-size: 11px;
+    color: rgb(111, 149, 0);
 }

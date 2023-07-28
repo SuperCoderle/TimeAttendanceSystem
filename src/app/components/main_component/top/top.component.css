@@ -38,3 +38,22 @@ header div .user p {
 .breadcrumb {
     padding: 1.4rem 2rem;
 }
+
+@media screen and (max-width: 480px) {
+    .breadcrumb {
+        padding-top: 0 !important;
+    }
+    header,
+    .breadcrumb {
+        padding: 1rem 0.5rem;
+    }
+
+    .toolbar form {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .toolbar .user {
+        display: none !important;
+    }
+}

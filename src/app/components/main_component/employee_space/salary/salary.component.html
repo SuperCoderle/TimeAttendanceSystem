@@ -1,1 +1,93 @@
-<p>salary works!</p>
+<div class="body bg-white">
+    <div class="title border-bottom d-flex justify-content-between align-items-center">
+        <h4 class="m-1">Nhân viên</h4>
+
+        <div class="view position-relative">
+            <div class="view-btn position-absolute d-flex">
+                <button class="active">Employee</button>
+                <button>Live View</button>
+                <button>Chart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex btn-options mt-3">
+        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="add" class="d-flex align-items-center">
+            New Item
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+        </button>
+        <nz-dropdown-menu #add="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item><a [routerLink]="['/home/employee/employeeform']">Thêm nhân viên</a></li>
+                <li nz-menu-item>menu1 2nd menu item</li>
+                <li nz-menu-item>menu1 3rd menu item</li>
+            </ul>
+        </nz-dropdown-menu>
+
+        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="export" class="d-flex align-items-center">
+            Export to
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+        </button>
+        <nz-dropdown-menu #export="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item><span nz-icon nzType="file-pdf" nzTheme="outline"></span> PDF</li>
+                <li nz-menu-item><span nz-icon nzType="file-excel" nzTheme="outline"></span> Excel</li>
+            </ul>
+        </nz-dropdown-menu>
+
+        <button nz-button nzType="primary" class="d-flex align-items-center ms-auto" [disabled]="loading" (click)="handleReload()">
+            Refresh
+            <span nz-icon nzType="reload" nzTheme="outline"></span>
+        </button>
+    </div>
+
+    <nz-table #rowSelectionTable [nzLoading]="loading" nzShowSizeChanger [nzData]="reports"
+        (nzCurrentPageDataChange)="onCurrentPageDataChange($event)">
+        <thead>
+            <tr>
+                <th [nzSelections]="listOfSelection" [(nzChecked)]="checked" [nzIndeterminate]="indeterminate"
+                    (nzCheckedChange)="onAllChecked($event)"></th>
+                <th *ngFor="let column of listOfColumn" >
+                    {{ column.title }}
+                </th>
+                <th style="width: 10%;" class="text-center">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rowSelectionTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.idReport)" (nzCheckedChange)="onItemChecked(data.idReport, $event)"></td>
+                <!-- <td>{{ getNameEmployee(data.employeeID) }}</td> -->
+                <td>{{ data.reportName }}</td>
+                <td>{{ formatCurrency(data.payroll) }}</td>
+                <td>{{ data.reportContent }}</td>
+                <td>{{ dateFormat(data.createdAt) }}</td>
+                <td class="text-center">
+                    <button nz-button nz-dropdown nzTrigger="click" [nzDropdownMenu]="actions">
+                        <span nz-icon nzType="more" nzTheme="outline"></span>
+                    </button>
+
+                    <nz-dropdown-menu #actions="nzDropdownMenu">
+                        <ul nz-menu class="menu">
+                            <li nz-menu-item>
+                                <button nz-button nzType="default" class="d-flex align-items-center"><span nz-icon nzType="eye" nzTheme="outline"></span> Details</button>
+                            </li>
+                            <li nz-menu-item>
+                                <button nz-button nzType="default" class="d-flex align-items-center" [routerLink]="['/home/employee/employeeform/', data.idEmployee]"><span nz-icon nzType="edit" nzTheme="outline"></span> Edit</button>
+                            </li>
+                            <li nz-menu-item>
+                                <button nz-button nzType="default" 
+                                        nz-popconfirm 
+
+                                        nzPopconfirmPlacement="left"
+                                        class="d-flex align-items-center">
+                                    <span nz-icon nzType="delete" nzTheme="outline"></span> 
+                                    Delete
+                                </button>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

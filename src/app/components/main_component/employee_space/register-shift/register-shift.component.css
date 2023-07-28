@@ -1,0 +1,24 @@
+/* [nz-form] {
+    max-width: 600px;
+} */
+
+button {
+    margin-left: 8px;
+}
+
+.phone-select {
+    width: 70px;
+}
+
+td span, i {
+    font-size: 11px;
+    color: rgb(111, 149, 0);
+}
+
+td .status {
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid;
+    padding: 0.3rem 0.7rem;
+    color: rgb(53, 139, 252);
+}

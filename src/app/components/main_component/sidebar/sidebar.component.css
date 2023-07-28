@@ -1,3 +1,8 @@
+.logo {
+    width: 40%;
+    height: auto;
+}
+
 div ul li a i {
     font-size: 18px;
     margin-right: 1rem;
@@ -13,7 +18,7 @@ div ul li a.active {
     color: #00B074 !important;
 }
 
-.nav:last-child li {
+/* .nav:last-child li {
     width: 2.3rem;
     height: 2.3rem;
     margin-bottom: 0.5rem;
@@ -65,4 +70,14 @@ div ul li a.active {
 
 .nav:last-child li:last-child span {
     background-color: #FF5B5B;
+}   */
+
+@media screen and (max-width: 1024px) {
+    .logo {
+        width: 5rem;
+    }
+
+    .title {
+        display: none;
+    }
 }
