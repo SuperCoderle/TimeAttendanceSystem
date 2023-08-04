@@ -1,0 +1,13 @@
+.employee-shifts-cont {
+    position: relative;
+    max-height: 50px;
+}
+
+.employee-shifts-name {
+    font-size: 15px;
+}
+
+.employee-shifts-title {
+    font-size: 12px;
+}
+

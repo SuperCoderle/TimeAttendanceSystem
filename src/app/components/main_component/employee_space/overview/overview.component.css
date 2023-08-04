@@ -25,10 +25,6 @@ button {
     border: none;
 }
 
-td button {
-    background: transparent;
-}
-
 .menu li:hover {
     background: transparent;
 }
@@ -37,15 +33,10 @@ td button {
     transform: translateX(-25%);
 }
 
-.btn-options button:nth-child(2) {
-    background-color: rgba(102, 131, 13, 0.816);
+.edit-btn {
+    background: var(--edit-color);
 }
 
-.btn-options button:nth-child(2):hover {
-    background-color: rgba(102, 131, 13, 0.614);
-}
-
-td span, i {
-    font-size: 11px;
-    color: rgb(111, 149, 0);
+.delete-btn {
+    background: var(--delete-color);
 }

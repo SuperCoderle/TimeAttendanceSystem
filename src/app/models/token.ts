@@ -1,5 +1,5 @@
 export interface Token
 {
-    token: String;
-    refToken: String;
+    token: string;
+    refToken: string;
 }

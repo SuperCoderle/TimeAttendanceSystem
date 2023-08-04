@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee } from 'src/app/models/dto';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
+import { CheckStatusCode } from 'src/app/status/status';
 
 @Component({
   selector: 'app-authority',
@@ -10,6 +13,7 @@ import { EmployeeService } from 'src/app/services/employee/employee.service';
 })
 export class AuthorityComponent implements OnInit {
   //Decalre variables
+  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   employees: Employee[] = [];
   roles: String[] = ["Administrator", "User"];
   loading = false;
@@ -18,7 +22,9 @@ export class AuthorityComponent implements OnInit {
   }
 
   //Constructor
-  constructor(private employeeService: EmployeeService, private nzMessageService: NzMessageService) { }
+  constructor(private useService: UseServiceService, 
+              private nzMessageService: NzMessageService, 
+              private router: Router) { }
 
   //Methods
   ngOnInit(): void {
@@ -26,15 +32,15 @@ export class AuthorityComponent implements OnInit {
   }
 
   async loadData() {
-    await this.employeeService.getAllEmployees()
+    await this.useService.getData("Employees/")
       .subscribe({
         next: (result) => {
           setTimeout(() => {
             this.employees = result;
           }, 600);
         },
-        error: (error) => {
-          console.log(error);
+        error: (error:HttpErrorResponse) => {
+          this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error.status);
         }
       })
   }
@@ -44,7 +50,7 @@ export class AuthorityComponent implements OnInit {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     const employee = this.employees.find(emp => emp.employeeID === employeeID)!;
     setTimeout(async () => {
-      await this.employeeService.Update(employee)
+      await this.useService.putData(`Employees/${employee.employeeID}`, employee)
         .subscribe({
           next: (result) => {
             setTimeout(() => {

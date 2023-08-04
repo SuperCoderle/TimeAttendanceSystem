@@ -1,4 +1,5 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MbscModule } from '@mobiscroll/angular';
+import { HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,10 +11,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/main_component/login/login.component';
 import { HeaderComponent } from './components/main_component/header/header.component';
 import { HomepageComponent } from './components/main_component/homepage/homepage.component';
-import { ToastModule } from 'primeng/toast';
 import { SidebarComponent } from './components/main_component/sidebar/sidebar.component';
 import { TopComponent } from './components/main_component/top/top.component';
-import { DashboardComponent } from './components/main_component/dashboard/dashboard.component';
+import { DashboardComponent } from './components/main_component/main/dashboard/dashboard.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -105,9 +105,12 @@ import { FormComponent } from './components/main_component/employee_space/form/f
 import { RegisterShiftComponent } from './components/main_component/employee_space/register-shift/register-shift.component';
 import { AuthorityComponent } from './components/main_component/settings/authority/authority.component';
 import { StaffCalendarComponent } from './components/main_component/work_schedule/staff-calendar/staff-calendar.component';
-import { EmployeeService } from './services/employee/employee.service';
 import { ViolationComponent } from './components/main_component/settings/violation/violation.component';
 import { PayrollComponent } from './components/main_component/settings/payroll/payroll.component';
+import { AttendanceComponent } from './components/main_component/main/attendance/attendance.component';
+import { ReportComponent } from './components/main_component/report/report.component';
+import { InformationComponent } from './components/main_component/employee_space/information/information.component';
+import { UseServiceService } from './services/useService/use-service.service';
 
 registerLocaleData(vi);
 
@@ -137,16 +140,20 @@ export function tokenGetter() {
     AuthorityComponent,
     StaffCalendarComponent,
     ViolationComponent,
-    PayrollComponent
+    PayrollComponent,
+    AttendanceComponent,
+    ReportComponent,
+    InformationComponent
   ],
-  imports: [
+  imports: [  
+    MbscModule, 
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastModule,
     NzAffixModule,
     NzAlertModule,
     NzAnchorModule,
@@ -227,7 +234,7 @@ export function tokenGetter() {
     { provide: NZ_I18N, useValue: vi_VN },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: EmployeeService,
+      useClass: UseServiceService,
       multi: true
     }
   ],

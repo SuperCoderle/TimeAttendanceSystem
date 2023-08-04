@@ -24,7 +24,7 @@
             </ul>
         </nz-dropdown-menu>
 
-        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="export" class="d-flex align-items-center">
+        <button nz-button nzType="primary" nzDanger nz-dropdown [nzDropdownMenu]="export" class="d-flex align-items-center">
             Xuất
             <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
@@ -58,37 +58,22 @@
                 <td>{{ data.fullname }}</td>
                 <td>{{ dateFormat(data.birthday) }}</td>
                 <td>{{ data.gender }}</td>
-                <td>{{ data.createdBy }} <br/> <span>{{ dateTimeFormat(data.createdAt) }}</span></td>
-                <td *ngIf="data.lastUpdatedBy != null">{{ data.lastUpdatedBy }} <br/> <span>{{ dateTimeFormat(data.lastUpdatedAt!) }}</span></td>
-                <td *ngIf="data.lastUpdatedBy == null"></td>
                 <td>{{ data.phoneNumber }}</td>
-                <td class="text-center">
-                    <button nz-button nz-dropdown nzTrigger="click" [nzDropdownMenu]="actions">
-                        <span nz-icon nzType="more" nzTheme="outline"></span>
+                <td class="text-center d-flex align-items-center">
+                    <button nz-button nzType="primary"><span nz-icon nzType="info-circle" nzTheme="outline"></span></button>
+                    <button class="edit-btn" nz-button nzType="primary" [routerLink]="['/home/employee/employeeform/', data.employeeID]"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
+                    <button 
+                        class="delete-btn"
+                        nz-button
+                        nzType="primary"
+                        nz-popconfirm
+                        [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.fullname + '?'"
+                        (nzOnConfirm)="confirm(data.employeeID)"
+                        (nzOnCancel)="cancel()"
+                        nzPopconfirmPlacement="top"
+                    >
+                        <span nz-icon nzType="delete" nzTheme="outline"></span>
                     </button>
-
-                    <nz-dropdown-menu #actions="nzDropdownMenu">
-                        <ul nz-menu class="menu">
-                            <li nz-menu-item>
-                                <button nz-button nzType="default" class="d-flex align-items-center"><span nz-icon nzType="eye" nzTheme="outline"></span> Details</button>
-                            </li>
-                            <li nz-menu-item>
-                                <button nz-button nzType="default" class="d-flex align-items-center" [routerLink]="['/home/employee/employeeform/', data.employeeID]"><span nz-icon nzType="edit" nzTheme="outline"></span> Edit</button>
-                            </li>
-                            <li nz-menu-item>
-                                <button nz-button nzType="default" 
-                                        nz-popconfirm 
-                                        [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.fullname + '?'"
-                                        (nzOnConfirm)="confirm(data.employeeID)"
-                                        (nzOnCancel)="cancel()"
-                                        nzPopconfirmPlacement="bottom"
-                                        class="d-flex align-items-center">
-                                    <span nz-icon nzType="delete" nzTheme="outline"></span> 
-                                    Delete
-                                </button>
-                            </li>
-                        </ul>
-                    </nz-dropdown-menu>
                 </td>
             </tr>
         </tbody>

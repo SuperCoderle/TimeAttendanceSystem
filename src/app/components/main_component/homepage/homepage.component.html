@@ -1,5 +1,5 @@
-<app-notfound *ngIf="token == null"></app-notfound>
-<section class="d-flex" *ngIf="token != null">
+<!-- <app-notfound *ngIf="token == null"></app-notfound> -->
+<section class="d-flex">
     <app-sidebar 
         class="sidebar h-100" [ngClass]="isActive ? 'active' : null"
         [ngStyle]="{'width': sidebarWidth}"

@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Violation } from 'src/app/models/dto';
-import { ListOfColumnViolation } from 'src/app/models/listOfColumn';
-import { ViolationService } from 'src/app/services/violation/violation.service';
+import { ViolationColumnList } from 'src/app/models/listOfColumn';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
+import { CheckStatusCode } from 'src/app/status/status';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -13,12 +14,15 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./violation.component.css']
 })
 export class ViolationComponent {
-  constructor(private violationService: ViolationService, private router: Router, private nzMessageService: NzMessageService) { }
+  constructor(private router: Router, 
+              private nzMessageService: NzMessageService,
+              private useService: UseServiceService) { }
 
   //Declare variables
+  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   loading = false;
   indeterminate = false;
-  listOfColumn = ListOfColumnViolation;
+  listOfColumn = ViolationColumnList;
   listOfCurrentPageData: readonly Violation[] = [];
   violations: readonly Violation[] = [];
   editCache: { [key: string]: { edit: boolean; data: Violation } } = {};
@@ -26,7 +30,7 @@ export class ViolationComponent {
   //Methods
   async handleLoadData() {
     this.loading = true;
-    await this.violationService.getAllViolations().subscribe({
+    await this.useService.getData("Violations/").subscribe({
       next: (result) => {
         setTimeout(() => {
           this.violations = result;
@@ -35,12 +39,7 @@ export class ViolationComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status == 403) {
-          this.router.navigate(["/403"]);
-        }
-        else {
-          this.loading = false;
-        }
+        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
       }
     });
   }
@@ -55,7 +54,7 @@ export class ViolationComponent {
   }
 
   async confirm(violationID: number) {
-    await this.violationService.Delete(violationID)
+    await this.useService.deleteData(`Violations/${violationID}`)
       .subscribe({
         next: (result) => {
           setTimeout(() => {
@@ -86,7 +85,7 @@ export class ViolationComponent {
     // const index = this.listOfData.findIndex(item => item.id === id);
     // Object.assign(this.listOfData[index], this.editCache[id].data);
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
-    await this.violationService.Update(this.editCache[id].data)
+    await this.useService.putData(`Violations/${this.editCache[id].data.violationID}`, this.editCache[id].data)
       .subscribe({
         next: (result) => {
           setTimeout(() => {

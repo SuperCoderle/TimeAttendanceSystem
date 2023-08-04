@@ -1,84 +1,130 @@
-import { Component } from '@angular/core';
-import { Appointment } from 'src/app/models/appointment';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MbscCalendarEvent, MbscEventcalendarOptions, MbscResource, setOptions } from '@mobiscroll/angular';
+import { Employee, Schedule } from 'src/app/models/dto';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
+import { CheckStatusCode } from 'src/app/status/status';
+
+setOptions({
+    theme: 'ios',
+    themeVariant: 'light'
+});
 
 @Component({
-  selector: 'app-staff-calendar',
-  templateUrl: './staff-calendar.component.html',
-  styleUrls: ['./staff-calendar.component.css']
+    selector: 'app-staff-calendar',
+    templateUrl: './staff-calendar.component.html',
+    styleUrls: ['./staff-calendar.component.css'],
 })
 
+export class StaffCalendarComponent implements OnInit {
+    //Constructor
+    constructor(private useService: UseServiceService,
+                private router: Router
+                ) {}
 
+    ngOnInit(): void {
+        console.log(this.calendarOptions.resources);
+    }
 
-export class StaffCalendarComponent {
-  appointmentsData: Appointment[] = [
-    {
-      text: 'Website Re-Design Plan',
-      startDate: new Date('2021-04-26T16:30:00.000Z'),
-      endDate: new Date('2021-04-26T18:30:00.000Z'),
-    }, {
-      text: 'Book Flights to San Fran for Sales Trip',
-      startDate: new Date('2021-04-26T19:00:00.000Z'),
-      endDate: new Date('2021-04-26T20:00:00.000Z'),
-      allDay: true,
-    }, {
-      text: 'Install New Router in Dev Room',
-      startDate: new Date('2021-04-26T21:30:00.000Z'),
-      endDate: new Date('2021-04-26T22:30:00.000Z'),
-    }, {
-      text: 'Approve Personal Computer Upgrade Plan',
-      startDate: new Date('2021-04-27T17:00:00.000Z'),
-      endDate: new Date('2021-04-27T18:00:00.000Z'),
-    }, {
-      text: 'Final Budget Review',
-      startDate: new Date('2021-04-27T19:00:00.000Z'),
-      endDate: new Date('2021-04-27T20:35:00.000Z'),
-    }, {
-      text: 'New Brochures',
-      startDate: new Date('2021-04-27T21:30:00.000Z'),
-      endDate: new Date('2021-04-27T22:45:00.000Z'),
-    }, {
-      text: 'Install New Database',
-      startDate: new Date('2021-04-28T16:45:00.000Z'),
-      endDate: new Date('2021-04-28T18:15:00.000Z'),
-    }, {
-      text: 'Approve New Online Marketing Strategy',
-      startDate: new Date('2021-04-28T19:00:00.000Z'),
-      endDate: new Date('2021-04-28T21:00:00.000Z'),
-    }, {
-      text: 'Upgrade Personal Computers',
-      startDate: new Date('2021-04-28T22:15:00.000Z'),
-      endDate: new Date('2021-04-28T23:30:00.000Z'),
-    }, {
-      text: 'Customer Workshop',
-      startDate: new Date('2021-04-29T18:00:00.000Z'),
-      endDate: new Date('2021-04-29T19:00:00.000Z'),
-      allDay: true,
-    }, {
-      text: 'Prepare 2021 Marketing Plan',
-      startDate: new Date('2021-04-29T18:00:00.000Z'),
-      endDate: new Date('2021-04-29T20:30:00.000Z'),
-    }, {
-      text: 'Brochure Design Review',
-      startDate: new Date('2021-04-29T21:00:00.000Z'),
-      endDate: new Date('2021-04-29T22:30:00.000Z'),
-    }, {
-      text: 'Create Icons for Website',
-      startDate: new Date('2021-04-30T17:00:00.000Z'),
-      endDate: new Date('2021-04-30T18:30:00.000Z'),
-    }, {
-      text: 'Upgrade Server Hardware',
-      startDate: new Date('2021-04-30T21:30:00.000Z'),
-      endDate: new Date('2021-04-30T23:00:00.000Z'),
-    }, {
-      text: 'Submit New Website Design',
-      startDate: new Date('2021-04-30T23:30:00.000Z'),
-      endDate: new Date('2021-05-01T01:00:00.000Z'),
-    }, {
-      text: 'Launch New Website',
-      startDate: new Date('2021-04-30T19:20:00.000Z'),
-      endDate: new Date('2021-04-30T21:00:00.000Z'),
-    },
-  ];
+    //Declare Variables
+    checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
+    employees: MbscResource[] = [];
+    schedules: MbscCalendarEvent[] = [];
+    calendarOptions: MbscEventcalendarOptions = {
+        view: {
+            timeline: {
+                type: 'week',
+                eventList: true,
+                startDay: 1,
+                endDay: 7
+            }
+        },
+        dragToCreate: false,
+        dragToResize: false,
+        dragToMove: true,
+        clickToCreate: false,
+        resources: this.employees
+    };
 
-  currentDate: Date = new Date(2021, 3, 29);
+    //Methods
+    startDate(shift: string, workDate: Date): string {
+        let date = '';
+        switch (shift) {
+            case "Ca sáng":
+                date = workDate.toString().split("00")[0] + "07:00:00";
+                break;
+            case "Ca chiều":
+                date = workDate.toString().split("00")[0] + "15:00:00";
+                break;
+            case "Ca tối":
+                date = workDate.toString().split("00")[0] + "23:00:00";
+                break;
+        }
+        return date;
+    }
+
+    endDate(shift: string, workDate: Date): string {
+        let date = '';
+        switch (shift) {
+            case "Ca sáng":
+                date = workDate.toString().split("00")[0] + "15:00:00";
+                break;
+            case "Ca chiều":
+                date = workDate.toString().split("00")[0] + "23:00:00";
+                break;
+            case "Ca tối":
+                date = workDate.toString().split("00")[0] + "07:00:00";
+                break;
+        }
+        return date;
+    }
+
+    onPageLoading(event: any): void {
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.useService.getData("Employees/")
+            .subscribe({
+                next: (result: readonly Employee[]) => {
+                    setTimeout(() => {
+                        result.forEach(item => {
+                            let emp: MbscResource = {
+                                id: item.employeeID,
+                                name: item.fullname,
+                                color: '#f1e920',
+                                title: 'HR'
+                            }
+                            if (!this.employees.some(x => x.id === emp.id)) {
+                                this.employees.push(emp);
+                            }
+                        });
+                    }, 600);
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+                }
+            })
+        await this.useService.getData("Schedules/")
+            .subscribe({
+                next: (result: readonly Schedule[]) => {
+                    setTimeout(() => {
+                        result.forEach(item => {
+                            if (!this.schedules.some(x => x.id === item.scheduleID)) {
+                                this.schedules.push({
+                                    // start: this.startDate(item.shift, item.workDate),
+                                    // end: this.endDate(item.shift, item.workDate),
+                                    // title: item.shift,
+                                    resource: 'asdasdasd'
+                                })
+                            }
+                        })
+                    }, 600)
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+                }
+            })
+    }
 }

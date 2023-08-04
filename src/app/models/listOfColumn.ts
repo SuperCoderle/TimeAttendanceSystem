@@ -1,8 +1,8 @@
-import { Employee, Payroll, Schedule, Violation } from "./dto"
+import { Employee, Payroll, Schedule, Violation, Report } from "./dto"
 
 
 //Employee
-export var ListOfColumnEmployee =
+export var EmployeeColumnList =
     [
         {
             title: 'Họ và Tên',
@@ -18,20 +18,10 @@ export var ListOfColumnEmployee =
             title: 'Giới tính',
             compare: (a: Employee, b: Employee) => a.gender.localeCompare(b.gender),
             priority: 3
-        },
-        {
-            title: 'Được tạo bởi',
-            compare: (a: Employee, b: Employee) => Number(a.createdAt) - Number(b.createdAt),
-            priority: 2
-        },
-        {
-            title: 'Cập nhật',
-            compare: (a: Employee, b: Employee) => Number(a.lastUpdatedAt) - Number(b.lastUpdatedAt),
-            priority: 1
         }
     ]
 //Schedule
-export var ListOfColumnShift =
+export var ShiftColumnList =
     [
         {
             title: 'Nhân viên',
@@ -40,27 +30,22 @@ export var ListOfColumnShift =
         },
         {
             title: 'Ca làm',
-            compare: (a: Schedule, b: Schedule) => a.shift.localeCompare(b.shift),
-            priority: 7
+            compare: (a: Schedule, b: Schedule) => a.shiftID - b.shiftID,
+            priority: 6
         },
         {
             title: 'Ngày làm',
             compare: (a: Schedule, b: Schedule) => Number(a.workDate) - Number(b.workDate),
-            priority: 6
+            priority: 5
         },
         {
             title: 'Nội dung',
             compare: (a: Schedule, b: Schedule) => a.description.localeCompare(b.description),
-            priority: 5
+            priority: 4
         },
         {
             title: 'Trạng thái',
             compare: (a: Schedule, b: Schedule) => a.status.localeCompare(b.status),
-            priority: 4
-        },
-        {
-            title: 'Vi phạm',
-            compare: (a: Schedule, b: Schedule) => Number(a.violationID) - Number(b.violationID),
             priority: 3
         },
         {
@@ -76,7 +61,7 @@ export var ListOfColumnShift =
     ]
 
 //Violation
-export var ListOfColumnViolation = 
+export var ViolationColumnList = 
     [
         {
             title: 'Loại vi phạm',
@@ -91,7 +76,7 @@ export var ListOfColumnViolation =
     ]
 
 //Payroll
-export var ListOfPayroll =
+export var PayrollColumnList =
     [
         {
             title: 'Nhân viên',
@@ -106,6 +91,31 @@ export var ListOfPayroll =
         {
             title: 'Lương cơ bản',
             compare: (a: Payroll, b: Payroll) => a.basicSalary - b.basicSalary,
+            priority: 1
+        }
+    ]
+
+//Report
+export var ReportColumnList = 
+    [
+        {
+            title: "Nhân viên",
+            compare: (a: Report, b: Report) => a.employeeID.localeCompare(b.employeeID),
+            priority: false
+        },
+        {
+            title: "Tiêu đề",
+            compare: (a: Report, b: Report) => a.title.localeCompare(b.title),
+            priority: 3
+        },
+        {
+            title: "Tổng lương",
+            compare: (a: Report, b: Report) => a.grossPay - b.grossPay,
+            priority: 2
+        },
+        {
+            title: "Trạng thái",
+            compare: (a: Report, b: Report) => a.paidStatus.localeCompare(b.paidStatus),
             priority: 1
         }
     ]

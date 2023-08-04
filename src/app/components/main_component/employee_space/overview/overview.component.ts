@@ -1,26 +1,31 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee } from 'src/app/models/dto';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
-import { ListOfColumnEmployee } from 'src/app/models/listOfColumn';
+import { EmployeeColumnList } from 'src/app/models/listOfColumn';
 import * as XLSX from 'xlsx';
+import { CheckStatusCode } from 'src/app/status/status';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css']
 })
+
 export class OverviewComponent implements OnInit{
 
-  constructor(private empService : EmployeeService, private router: Router, private nzMessageService:NzMessageService) {}
+  constructor(private useService : UseServiceService, 
+              private router: Router, 
+              private nzMessageService:NzMessageService,
+              ) {}
 
   //Declare variables
   loading = false;
   indeterminate = false;
-  listOfColumn = ListOfColumnEmployee;
+  listOfColumn = EmployeeColumnList;
   listOfCurrentPageData: readonly Employee[] = [];
   employees: readonly Employee[] = [];
   dateFormat(date: Date): string {
@@ -29,11 +34,12 @@ export class OverviewComponent implements OnInit{
   dateTimeFormat(date: Date): string {
     return moment(date).format("MMM, DD YYYY  LT");
   }
+  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
 
   async handleLoadData()
   {
     this.loading = true;
-    await this.empService.getAllEmployees().subscribe({
+    await this.useService.getData("Employees/").subscribe({
       next: (result) => {
         setTimeout(() => {
           this.employees = result;
@@ -41,14 +47,7 @@ export class OverviewComponent implements OnInit{
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        if(error.status == 403)
-        {
-          this.router.navigate(["/403"]);
-        }
-        else
-        {
-          this.loading = false;
-        }
+        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
       }
     });
   }
@@ -64,7 +63,7 @@ export class OverviewComponent implements OnInit{
   }
 
   async confirm(employeeID: string) {
-    await this.empService.Delete(employeeID)
+    await this.useService.deleteData(`Employees/${employeeID}`)
       .subscribe({
         next: (result) => {
           setTimeout(() => {
@@ -72,7 +71,7 @@ export class OverviewComponent implements OnInit{
           }, 600);
           this.handleLoadData();
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
           console.log(error);
           this.nzMessageService.error('Xóa thất bại');
         }

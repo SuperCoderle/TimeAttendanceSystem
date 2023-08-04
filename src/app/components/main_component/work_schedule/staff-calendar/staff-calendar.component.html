@@ -1,0 +1,29 @@
+<div class="body bg-white">
+    <div class="title border-bottom d-flex justify-content-between align-items-center">
+        <h4 class="m-1">Ca làm việc</h4>
+    </div>
+
+    <div class="d-flex btn-options my-3">
+        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="add" class="d-flex align-items-center">
+            Thay đổi
+            <span nz-icon nzType="caret-down" nzTheme="outline"></span>
+        </button>
+        <nz-dropdown-menu #add="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item routerLink="/home/calendar">Lịch làm việc</li>
+                <li nz-menu-item routerLink="/home/calendar/staff-calendar">Ca làm việc</li>
+                <li nz-menu-item>Chi tiết ca</li>
+            </ul>
+        </nz-dropdown-menu>
+    </div>
+
+    <mbsc-eventcalendar [data]="schedules" [options]="calendarOptions" [resourceTemplate]="resourceTemp" (onPageLoading)="onPageLoading($event)"
+         class="md-employee-shifts">
+        <ng-template #resourceTemp let-resource>
+            <div class="employee-shifts-cont">
+                <div class="employee-shifts-name">{{resource.name}}</div>
+                <div class="employee-shifts-title">{{resource.title}}</div>
+            </div>
+        </ng-template>
+    </mbsc-eventcalendar>
+</div>

@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee, Payroll } from 'src/app/models/dto';
-import { ListOfPayroll } from 'src/app/models/listOfColumn';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
-import { PayrollService } from 'src/app/services/payroll/payroll.service';
+import { PayrollColumnList } from 'src/app/models/listOfColumn';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
+import { CheckStatusCode } from 'src/app/status/status';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -13,13 +13,18 @@ import * as XLSX from 'xlsx';
   templateUrl: './payroll.component.html',
   styleUrls: ['./payroll.component.css']
 })
+
 export class PayrollComponent {
-  constructor(private payrollService: PayrollService, private employeeService: EmployeeService, private router: Router, private nzMessageService: NzMessageService) { }
+  constructor( 
+              private router: Router, 
+              private nzMessageService: NzMessageService,
+              private useService: UseServiceService) { }
 
   //Declare variables
+  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   loading = false;
   indeterminate = false;
-  listOfColumn = ListOfPayroll;
+  listOfColumn = PayrollColumnList;
   listOfCurrentPageData: readonly Payroll[] = [];
   payrolls: readonly Payroll[] = [];
   employees: readonly Employee[] = [];
@@ -31,8 +36,8 @@ export class PayrollComponent {
   //Methods
   async handleLoadData() {
     this.loading = true;
-    await this.payrollService.getAllPayrolls().subscribe({
-      next: (result) => {
+    await this.useService.getData("Payrolls/").subscribe({
+      next: (result: readonly Payroll[]) => {
         setTimeout(() => {
           this.payrolls = result;
           this.loading = false;
@@ -40,15 +45,10 @@ export class PayrollComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status == 403) {
-          this.router.navigate(["/403"]);
-        }
-        else {
-          this.loading = false;
-        }
+        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
       }
     });
-    await this.employeeService.getAllEmployees().subscribe({
+    await this.useService.getData("Employees/").subscribe({
       next: (result) => {
         setTimeout(() => {
           this.employees = result;
@@ -57,12 +57,7 @@ export class PayrollComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status == 403) {
-          this.router.navigate(["/403"]);
-        }
-        else {
-          this.loading = false;
-        }
+        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
       }
     });
   }
@@ -77,7 +72,7 @@ export class PayrollComponent {
   }
 
   async confirm(id: number) {
-    await this.payrollService.Delete(id)
+    await this.useService.deleteData(`Payrolls/${id}`)
       .subscribe({
         next: (result) => {
           setTimeout(() => {
@@ -106,7 +101,7 @@ export class PayrollComponent {
 
   async saveEdit(id: number) {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
-    await this.payrollService.Update(this.editCache[id].data)
+    await this.useService.putData(`Payrolls/${this.editCache[id].data.payRollID}`, this.editCache[id].data)
       .subscribe({
         next: (result) => {
           setTimeout(() => {

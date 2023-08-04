@@ -18,7 +18,7 @@ div ul li a.active {
     color: #00B074 !important;
 }
 
-/* .nav:last-child li {
+.extension li {
     width: 2.3rem;
     height: 2.3rem;
     margin-bottom: 0.5rem;
@@ -28,7 +28,7 @@ div ul li a.active {
     cursor: pointer;
 }
 
-.nav:last-child li i {
+.extension li i {
     font-size: 20px;
     position: absolute;
     top: 50%;
@@ -49,7 +49,7 @@ div ul li a.active {
     color: #FF5B5B;
 }
 
-.nav:last-child li span {
+.extension li span {
     position: absolute;
     width: 19px;
     height: 19px;
@@ -64,13 +64,13 @@ div ul li a.active {
     border: 3px solid #F3F2F7;
 }
 
-.nav:last-child li:nth-child(3) span {
+.extension li:nth-child(3) span {
     background-color: #5E6C93;
 }
 
-.nav:last-child li:last-child span {
+.extension li:last-child span {
     background-color: #FF5B5B;
-}   */
+}  
 
 @media screen and (max-width: 1024px) {
     .logo {

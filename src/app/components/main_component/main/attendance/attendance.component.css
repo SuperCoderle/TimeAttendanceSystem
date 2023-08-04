@@ -1,0 +1,22 @@
+nz-card {
+    box-shadow: 0px 1px 12px 1px rgb(219, 204, 204);
+}
+
+.dot {
+    background-color: green;
+    padding: 0.2rem;
+    border-radius: 50%;
+}
+
+.status {
+    margin: 0;
+    width: 90%;
+}
+
+.clock {
+    position:relative;
+	font-family:monaco,consolas,"courier new",monospace;
+	font-size:3.5rem;
+	line-height:1.375;
+    text-align: center;
+}

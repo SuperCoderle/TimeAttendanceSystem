@@ -1,9 +1,9 @@
-import { NgModule, Component } from '@angular/core';
+import { NgModule, Component, OnInit } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeeComponent } from './components/main_component/employee_space/employee/employee.component';
 import { LoginComponent } from './components/main_component/login/login.component';
 import { HomepageComponent } from './components/main_component/homepage/homepage.component';
-import { DashboardComponent } from './components/main_component/dashboard/dashboard.component';
+import { DashboardComponent } from './components/main_component/main/dashboard/dashboard.component';
 import { HistoryComponent } from './components/main_component/history/history.component';
 import { CalendarComponent } from './components/main_component/work_schedule/calendar/calendar.component';
 import { SalaryComponent } from './components/main_component/employee_space/salary/salary.component';
@@ -16,21 +16,27 @@ import { StaffCalendarComponent } from './components/main_component/work_schedul
 import { AuthorityComponent } from './components/main_component/settings/authority/authority.component';
 import { ViolationComponent } from './components/main_component/settings/violation/violation.component';
 import { PayrollComponent } from './components/main_component/settings/payroll/payroll.component';
+import { AttendanceComponent } from './components/main_component/main/attendance/attendance.component';
+import { ReportComponent } from './components/main_component/report/report.component';
+import { InformationComponent } from './components/main_component/employee_space/information/information.component';
+import { AuthGuard } from './authguard/guardd/auth.guard';
 
 const routes: Routes = [
   {
-    path: '', 
+    path: '',
     component: LoginComponent
   },
   {
     path: 'home',
     component: HomepageComponent,
+    canActivate: [AuthGuard],
     children: [
       {
-        path: '', redirectTo: 'dashboard', pathMatch: 'full'
+        path: 'attendance/:id',
+        component: AttendanceComponent
       },
       {
-        path: 'dashboard', 
+        path: 'dashboard',
         component: DashboardComponent
       },
       {
@@ -63,21 +69,29 @@ const routes: Routes = [
           {
             path: 'regshift',
             component: RegisterShiftComponent
+          },
+          {
+            path: 'information',
+            component: InformationComponent
           }
         ]
       },
       {
         path: 'calendar',
-        component: CalendarComponent,
         children: [
           {
-            path: '', redirectTo: 'calendar', pathMatch: 'full'
+            path: '',
+            component: CalendarComponent
           },
           {
             path: 'staff-calendar',
             component: StaffCalendarComponent
           }
         ]
+      },
+      {
+        path: 'report',
+        component: ReportComponent
       },
       {
         path: 'settings',
@@ -99,12 +113,21 @@ const routes: Routes = [
     ]
   },
   {
-    path: '404',
-    component: NotfoundComponent
-  },
-  {
-    path: '403',
-    component: ForbiddenComponent
+    path: 'error',
+    children: [
+      {
+        path: '401',
+        component: ForbiddenComponent
+      },
+      {
+        path: '403',
+        component: ForbiddenComponent
+      },
+      {
+        path: '404',
+        component: NotfoundComponent
+      }
+    ]
   }
 ];
 
@@ -112,4 +135,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
+

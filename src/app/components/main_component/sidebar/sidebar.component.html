@@ -6,24 +6,17 @@
     <p class="title m-0">Trang admin quản lý chấm công</p>
     <ul nzMode="inline" nz-menu [nzInlineCollapsed]="width > 480 && width <= 1024 ? true : false"
         class="nav nav-pills flex-column mb-auto mt-4">
-        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['dashboard']">
+        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['dashboard']" *ngIf="isAdmin()">
             <span nz-icon nzType="home" nzTheme="outline"></span>
             <span style="margin-left: 10px;">Dashboard</span>
         </li>
+        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['attendance']" *ngIf="!isAdmin()">
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">Chấm công</span>
+        </li>
         <li class="nav-item align-items-center w-100" nz-submenu nzTitle="Nhân viên" nzIcon="team">
-            <ul *ngIf="isAdmin()">
-                <li nz-menu-item routerLink="employee">Overview</li>
-                <li nz-menu-item routerLink="employee/salary">Lịch sử chấm công</li>
-                <li nz-menu-item routerLink="employee/salary">Tiền lương</li>
-                <li nz-menu-item routerLink="employee/regshift">Đăng ký ca</li>
-                <li nz-menu-item *ngIf="user.role == 'Administrator'">Báo cáo</li>
-            </ul>
-
-            <ul *ngIf="!isAdmin()">
-                <li nz-menu-item routerLink="employee">Overview</li>
-                <li nz-menu-item routerLink="employee/salary">Lịch sử chấm công</li>
-                <li nz-menu-item routerLink="employee/salary">Tiền lương</li>
-                <li nz-menu-item routerLink="employee/regshift">Đăng ký ca</li>
+            <ul *ngFor="let menu of newMenus('Nhân viên')">
+                <li nz-menu-item [routerLink]="menu.url">{{ menu.title }}</li>
             </ul>
         </li>
         <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['calendar']">
@@ -31,21 +24,18 @@
             <span style="margin-left: 10px;">Lịch làm việc</span>
         </li>
         <li class="nav-item align-items-center w-100" *ngIf="isAdmin()" nz-menu-item
-            [routerLink]="['analytic']">
+            [routerLink]="['report']">
             <span nz-icon nzType="stock" nzTheme="outline"></span>
             <span style="margin-left: 10px;">Báo cáo</span>
         </li>
-        <li class="nav-item align-items-center w-100" nz-submenu nzTitle="Cài đặt" nzIcon="setting">
-            <ul>
-                <li nz-menu-item routerLink="settings/authority">Quản lý phân quyền</li>
-                <li nz-menu-item routerLink="settings/violation">Quản lý vi phạm</li>
-                <li nz-menu-item routerLink="settings/menu">Quản lý menu</li>
-                <li nz-menu-item routerLink="settings/payroll">Quản lý bảng lương</li>
+        <li class="nav-item align-items-center w-100" *ngIf="isAdmin()" nz-submenu nzTitle="Cài đặt" nzIcon="setting">
+            <ul *ngFor="let menu of newMenus('Cài đặt')">
+                <li nz-menu-item [routerLink]="menu.url">{{ menu.title }}</li>
             </ul>
         </li>
     </ul>
 
-    <!-- <ul class="nav nav-pills nav-flush flex-column mt-auto px-3 w-100">
+    <ul class="extension nav nav-pills nav-flush flex-column mt-auto px-3 w-100" *ngIf="!isAdmin()">
         <li class="nav-item">
             <i class='bx bx-comment-dots'></i>
             <span>53</span>
@@ -62,5 +52,5 @@
             <i class='bx bx-cog'></i>
             <span>19</span>
         </li>
-    </ul> -->
+    </ul>
 </div>

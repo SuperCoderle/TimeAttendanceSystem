@@ -20,6 +20,7 @@ export class TopComponent implements OnInit {
     if(this.token != null)
     {
       this.user = jwt_decode(this.token);
+      console.log(this.user);
     }
   }
 

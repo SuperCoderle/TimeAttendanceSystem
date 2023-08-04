@@ -2,15 +2,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
-import { Employee, Payroll } from 'src/app/models/dto';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
+import { Employee, User, Payroll } from 'src/app/models/dto';
 import { v4 as uuid } from 'uuid';
 import jwt_decode from 'jwt-decode';
-import { User } from 'src/app/models/user';
-import { UserService } from 'src/app/services/user/user.service';
-import { PayrollService } from 'src/app/services/payroll/payroll.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { CheckStatusCode } from 'src/app/status/status';
+import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
 @Component({
   selector: 'app-form',
@@ -19,6 +16,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class FormComponent {
   //Declare Variables
+  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   validateForm: UntypedFormGroup;
   employeeID: string | null = null;
   title: String = "";
@@ -63,11 +61,9 @@ export class FormComponent {
 
   //Constructor
   constructor(private formBuilder: UntypedFormBuilder, 
-              private employeeService: EmployeeService, 
               private router: Router, 
               private activeRoute: ActivatedRoute, 
-              private userService: UserService,
-              private payrollService: PayrollService,
+              private useService: UseServiceService,
               private nzMessageService: NzMessageService) 
   {
     if (this.token != null) {
@@ -106,9 +102,7 @@ export class FormComponent {
       gender: this.validateForm.controls["gender"].value,
       phoneNumber: this.validateForm.controls["phoneNumber"].value,
       createdAt: new Date,
-      createdBy: this.user["fullname"],
-      lastUpdatedAt: null,
-      lastUpdatedBy: null
+      createdBy: this.user["fullname"]
     }
 
     var newUser: User = {
@@ -117,9 +111,7 @@ export class FormComponent {
       email: this.validateForm.controls["email"].value,
       password: this.validateForm.controls["password"].value,
       employeeID: newEmp.employeeID,
-      lastLoggedIn: null,
       createdAt: new Date,
-      lastUpdatedAt: null,
       isManager: this.validateForm.controls["isManager"].value,
       isActive: true
     }
@@ -131,7 +123,7 @@ export class FormComponent {
       employeeID: newEmp.employeeID
     }
 
-    await this.userService.Register(newUser)
+    await this.useService.postData("TbUsers/", newUser)
       .subscribe({
         next: (result) => {
           this.createNewEmp(newEmp);
@@ -145,7 +137,7 @@ export class FormComponent {
   }
 
   async createNewEmp(newEmp: Employee) {
-    await this.employeeService.Add(newEmp)
+    await this.useService.putData(`Employees/${newEmp.employeeID}`, newEmp)
       .subscribe({
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -155,7 +147,7 @@ export class FormComponent {
 
   async addToPayroll(newPay: Payroll)
   {
-    await this.payrollService.Add(newPay)
+    await this.useService.postData("Payrolls/", newPay)
       .subscribe({
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -165,13 +157,13 @@ export class FormComponent {
 
   async getEmployee() {
     if (this.employeeID != null) {
-      await this.employeeService.getById(this.employeeID)
+      await this.useService.getData(`Employees/${this.employeeID}`)
         .subscribe({
           next: (result) => {
             this.employee = result;
           },
-          error: (error) => {
-            console.log(error);
+          error: (error: HttpErrorResponse) => {
+            this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
           }
         })
     }
@@ -190,7 +182,7 @@ export class FormComponent {
       lastUpdatedBy: this.user["fullname"]
     }
 
-    await this.employeeService.Update(data)
+    await this.useService.putData(`Employees/${data.employeeID}`, data)
       .subscribe({
         next: (result) => {
           this.router.navigate(['/home/employee']);
