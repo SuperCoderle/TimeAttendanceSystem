@@ -1,10 +1,10 @@
 import jwt_decode from 'jwt-decode';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UseServiceService } from 'src/app/services/useService/use-service.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { LoginService } from 'src/app/services/loginService/login.service';
 
 @Component({
   selector: 'app-login',
@@ -27,21 +27,24 @@ export class LoginComponent {
   })
 
   //Constructor
-  constructor(private useService: UseServiceService, 
+  constructor(private loginService: LoginService, 
               private nzMessageService: NzMessageService, 
               private router: Router, private formBuilder:FormBuilder) { }
 
   async handleLogin() {
     this.loading = true;
-    window.localStorage.removeItem("token");
-    await this.useService.postData(`Login?Email=${this.form.controls["email"].value}&Password=${this.form.controls["password"].value}`, null)
+    window.localStorage.clear();
+    await this.loginService.login(this.form.controls["email"].value!, this.form.controls["password"].value!)
       .subscribe({
         next: (result) => {
-          setTimeout(() => {
-            this.loading = false;
-            window.localStorage.setItem("token", result.token);
-            this.isAdmin(result.token) ? this.router.navigate(['home/dashboard']) : this.router.navigate(['home/employee/information']);
-          }, 1000);
+          if(result != null)
+          {
+            setTimeout(() => {
+              this.loading = false;
+              this.loginService.storeToken(result);
+              this.isAdmin(result.token) ? this.router.navigate(['home/dashboard']) : this.router.navigate(['home/information']);
+            }, 1000);
+          }
         },
         error: (error: HttpErrorResponse) => {
           setTimeout(() => {

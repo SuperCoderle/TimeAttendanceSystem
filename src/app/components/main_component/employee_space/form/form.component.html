@@ -1,18 +1,19 @@
+<app-loading *ngIf="loading"></app-loading>
 <div class="body bg-white">
-    <div class="title border-bottom d-flex justify-content-between align-items-center">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
         <h4 class="m-1">{{ title }}</h4>
     </div>
 
     <form nz-form [formGroup]="validateForm" class="mt-4" *ngIf="title == 'Thêm nhân viên'" (ngSubmit)="submit()">
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Họ và tên</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Họ và tên</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." nzErrorTip="Hãy nhập tên!">
                 <input nz-input formControlName="fullname" placeholder="Vd: Nguyễn Văn A" />
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Ngày/tháng/năm sinh</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Ngày sinh</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
                 nzErrorTip="Hãy chọn ngày sinh!">
                 <nz-date-picker class="w-100" formControlName="birthday" nzPlaceHolder="Chọn ngày sinh"></nz-date-picker>
@@ -20,7 +21,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Giới tính</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Giới tính</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Hãy chọn giới tính!">
                 <nz-select formControlName="gender" nzPlaceHolder="Chọn giới tính">
                     <nz-option nzValue="Nam" nzLabel="Nam"></nz-option>
@@ -30,7 +31,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzFor="phone" nzRequired>Số điện thoại</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzFor="phone" nzRequired>Số điện thoại</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback="" [nzValidateStatus]="validateForm.controls['phoneNumber']"
                 nzErrorTip="Hãy nhập số điện thoại!">
                 <nz-input-group>
@@ -40,7 +41,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>E-mail</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>E-mail</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="emailErrorTpl">
                 <input nz-input formControlName="email" placeholder="email" type="email" />
                 <ng-template #emailErrorTpl let-control>
@@ -51,7 +52,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Chức vụ</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Chức vụ</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
                 nzErrorTip="Vui lòng chọn chức vụ!">
                 <nz-select formControlName="position" nzPlaceHolder="Chọn chức vụ" nzAllowClear>
@@ -62,7 +63,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Mật khẩu</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Mật khẩu</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
                 nzErrorTip="Hãy nhập mật khẩu!">
                 <input nz-input type="password" formControlName="password" placeholder="Mật khẩu"
@@ -70,7 +71,7 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Xác nhận mật khẩu</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Xác nhận mật khẩu</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
                 [nzErrorTip]="passwordErrorTpl">
                 <input nz-input type="password" formControlName="confirm" placeholder="Xác nhận mật khẩu" />
@@ -82,7 +83,7 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-control [nzOffset]="6">
+            <nz-form-control [nzOffset]="width <= 600 ? 2 : 6">
                 <label nz-checkbox [(ngModel)]="isChecked" formControlName="isManager">
                     Chọn mục này để xác nhận tạo tài khoản cho quản lý
                 </label>
@@ -90,33 +91,33 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-control [nzOffset]="width <= 480 ? 1 : 6" [nzSpan]="12">
+            <nz-form-control [nzOffset]="width <= 600 ? 1 : 6" [nzSpan]="12">
                 <button nz-button nzType="primary" [disabled]="!validateForm.valid">Hoàn tất đăng ký</button>
                 <button nz-button (click)="resetForm($event)">Xóa tất cả</button>
             </nz-form-control>
         </nz-form-item>
     </form>
 
-    <!-- <form nz-form [formGroup]="validateForm" class="mt-4" *ngIf="title != 'Thêm nhân viên'" (ngSubmit)="update()">
+    <form nz-form [formGroup]="validateForm" class="mt-4" *ngIf="title != 'Thêm nhân viên'" (ngSubmit)="update()">
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Họ và tên</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Họ và tên</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." nzErrorTip="Hãy nhập tên!">
-                <input nz-input formControlName="fullname" [(ngModel)]="employee.fullname" placeholder="Vd: Nguyễn Văn A" />
+                <input nz-input formControlName="fullname" placeholder="Vd: Nguyễn Văn A" />
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Ngày/tháng/năm sinh</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Ngày sinh</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..."
                 nzErrorTip="Hãy chọn ngày sinh!">
-                <nz-date-picker class="w-100" [(ngModel)]="employee.birthday" formControlName="birthday" nzPlaceHolder="Chọn ngày sinh"></nz-date-picker>
+                <nz-date-picker class="w-100" formControlName="birthday" nzPlaceHolder="Chọn ngày sinh"></nz-date-picker>
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzRequired>Giới tính</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Giới tính</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Hãy chọn giới tính!">
-                <nz-select formControlName="gender" nzPlaceHolder="Chọn giới tính" [(ngModel)]="employee.gender">
+                <nz-select formControlName="gender" nzPlaceHolder="Chọn giới tính">
                     <nz-option nzValue="Nam" nzLabel="Nam"></nz-option>
                     <nz-option nzValue="Nữ" nzLabel="Nữ"></nz-option>
                 </nz-select>
@@ -124,30 +125,20 @@
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="width > 480 && width <= 1024 ? 7 : 6" nzFor="phone" nzRequired>Số điện thoại</nz-form-label>
+            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzFor="phone" nzRequired>Số điện thoại</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback="" [nzValidateStatus]="validateForm.controls['phoneNumber']"
                 nzErrorTip="Hãy nhập số điện thoại!">
                 <nz-input-group>
-                    <input formControlName="phoneNumber" type="tel" id="'phone'" [(ngModel)]="employee.phoneNumber" nz-input placeholder="Nhập số điện thoại"/>
+                    <input formControlName="phoneNumber" type="tel" id="'phone'" nz-input placeholder="Nhập số điện thoại"/>
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-            <nz-form-label class="text-start" [nzSpan]="6" nzRequired>E-mail</nz-form-label>
-            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="emailErrorTpl">
-                <input nz-input formControlName="email" placeholder="email" type="email" [(ngModel)]="employee.email"/>
-                <ng-template #emailErrorTpl let-control>
-                    <ng-container *ngIf="control.hasError('email')">The input is not valid E-mail!</ng-container>
-                    <ng-container *ngIf="control.hasError('required')">Please input your E-mail!</ng-container>
-                </ng-template>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-control [nzOffset]="width <= 480 ? 1 : 6" [nzSpan]="12">
+            <nz-form-control [nzOffset]="width <= 600 ? 1 : 6" [nzSpan]="12">
                 <button nz-button nzType="primary" >Hoàn tất cập nhật</button>
                 <button nz-button (click)="resetForm($event)">Xóa tất cả</button>
             </nz-form-control>
         </nz-form-item>
-    </form> -->
+    </form>
 </div>

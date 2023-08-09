@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee } from 'src/app/models/dto';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
-import { CheckStatusCode } from 'src/app/status/status';
 
 @Component({
   selector: 'app-authority',
@@ -13,7 +12,6 @@ import { CheckStatusCode } from 'src/app/status/status';
 })
 export class AuthorityComponent implements OnInit {
   //Decalre variables
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   employees: Employee[] = [];
   roles: String[] = ["Administrator", "User"];
   loading = false;
@@ -23,8 +21,7 @@ export class AuthorityComponent implements OnInit {
 
   //Constructor
   constructor(private useService: UseServiceService, 
-              private nzMessageService: NzMessageService, 
-              private router: Router) { }
+              private nzMessageService: NzMessageService) { }
 
   //Methods
   ngOnInit(): void {
@@ -40,7 +37,7 @@ export class AuthorityComponent implements OnInit {
           }, 600);
         },
         error: (error:HttpErrorResponse) => {
-          this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error.status);
+          console.log(error);
         }
       })
   }

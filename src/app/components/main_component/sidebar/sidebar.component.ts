@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import  jwt_decode  from 'jwt-decode';
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Menu } from 'src/app/models/dto';
-import { CheckStatusCode } from 'src/app/status/status';
 import { Router } from '@angular/router';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
@@ -11,9 +10,9 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewInit {
   //Declare Variables
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
+  loading = false;
   token?: string | null = localStorage.getItem("token");
   user: any;
   userRole: String[] = [];
@@ -26,7 +25,6 @@ export class SidebarComponent implements OnInit {
     {
       this.user = jwt_decode(this.token);
       this.user['roles'] instanceof Array ? this.userRole = this.user['roles'] : this.userRole.push(this.user['roles']);
-      console.log(this.user);
     }
     this.width = window.innerWidth;
     this.loadData();
@@ -35,6 +33,9 @@ export class SidebarComponent implements OnInit {
   //Constructor
   constructor(private useService: UseServiceService,
               private router: Router) {}
+  ngAfterViewInit(): void {
+    this.width = window.innerWidth;
+  }
 
   //Methods
   isAdmin()
@@ -42,22 +43,34 @@ export class SidebarComponent implements OnInit {
     return this.userRole.some(x => x == "Administrator");
   }
 
-  newMenus(parent: string): Menu[] {
-    return this.menus.filter(x => x.parent === parent);
+  parentMenu()
+  {
+    return this.menus.filter(x => x.parentID == null && !x.isSubmenu);
   }
 
+  submenu()
+  {
+    return this.menus.filter(x => x.isSubmenu);
+  }
+
+  childMenu(parentID: number): Menu[] {
+    return this.menus.filter(x => x.parentID === parentID);
+  }
+  
   async loadData()
   {
-    await this.useService.getData("Menus/")
+    this.loading = true;
+    await this.useService.getData("Menus/Authenticate")
       .subscribe({
         next: (result) => {
           setTimeout(() => {
             this.menus = result;
-            console.log(this.menus);
+            this.loading = false
           }, 600);
         },
         error: (error: HttpErrorResponse) => {
-          this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+          this.loading = false; 
+          console.log(error);
         }
       })
   }

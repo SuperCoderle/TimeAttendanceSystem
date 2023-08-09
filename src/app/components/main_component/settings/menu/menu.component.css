@@ -1,0 +1,32 @@
+button,
+nz-date-picker {
+    margin: 0 8px 8px 0;
+}
+
+button {
+    border: none;
+}
+
+.menu li:hover {
+    background: transparent;
+}
+
+.menu {
+    transform: translateX(-25%);
+}
+
+.edit-btn {
+    background: var(--edit-color);
+}
+
+.delete-btn {
+    background: var(--delete-color);
+}
+
+.save {
+    margin-right: 8px;
+}
+
+nz-select {
+    width: 100%;
+}

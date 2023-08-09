@@ -7,9 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class HomepageComponent implements OnInit {
-  token: any = window.localStorage.getItem("token");
   isActive = false;
-  sidebarWidth: string = window.innerWidth <= 480 ? `${window.innerWidth * 0.8}px` : window.innerWidth >= 1280 ? '300px' : 'auto';
+  sidebarWidth: string = window.innerWidth <= 600 ? `${window.innerWidth * 0.8}px` : window.innerWidth >= 1280 ? '300px' : 'auto';
   translateMenu: string = '';
 
   constructor() {

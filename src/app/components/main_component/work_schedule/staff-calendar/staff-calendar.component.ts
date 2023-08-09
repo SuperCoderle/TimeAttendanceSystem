@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { MbscCalendarEvent, MbscEventcalendarOptions, MbscResource, setOptions } from '@mobiscroll/angular';
 import { Employee, Schedule } from 'src/app/models/dto';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
-import { CheckStatusCode } from 'src/app/status/status';
 
 setOptions({
     theme: 'ios',
@@ -19,8 +18,7 @@ setOptions({
 
 export class StaffCalendarComponent implements OnInit {
     //Constructor
-    constructor(private useService: UseServiceService,
-                private router: Router
+    constructor(private useService: UseServiceService
                 ) {}
 
     ngOnInit(): void {
@@ -28,7 +26,6 @@ export class StaffCalendarComponent implements OnInit {
     }
 
     //Declare Variables
-    checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
     employees: MbscResource[] = [];
     schedules: MbscCalendarEvent[] = [];
     calendarOptions: MbscEventcalendarOptions = {
@@ -103,7 +100,7 @@ export class StaffCalendarComponent implements OnInit {
                     }, 600);
                 },
                 error: (error: HttpErrorResponse) => {
-                    this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+                    console.log(error);
                 }
             })
         await this.useService.getData("Schedules/")
@@ -123,7 +120,7 @@ export class StaffCalendarComponent implements OnInit {
                     }, 600)
                 },
                 error: (error: HttpErrorResponse) => {
-                    this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+                    console.log(error);
                 }
             })
     }

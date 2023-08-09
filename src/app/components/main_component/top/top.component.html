@@ -1,8 +1,7 @@
 <header>
     <div class="toolbar d-flex align-items-center">
         <form class="w-50 me-4 position-relative" role="search">
-            <input type="search" class="form-control rounded-1 px-3" placeholder="Tìm kiếm"
-                aria-label="Search">
+            <input type="search" class="form-control rounded-1 px-3" placeholder="Tìm kiếm" aria-label="Search">
             <i class='position-absolute bx bx-search'></i>
         </form>
 
@@ -19,19 +18,21 @@
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#" (click)="Signout()">Sign out</a></li>
+                <li><a class="dropdown-item" (click)="Signout()">Sign out</a></li>
             </ul>
         </div>
     </div>
 </header>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb m-0 rounded-3">
-        <li class="breadcrumb-item" *ngFor="let path of paths">
-            <a class="link-body-emphasis" [routerLink]="[path]">
-                <i class='bx bx-home'></i>
-                <span class="visually-hidden">Home</span>
-            </a>
-        </li>
-    </ol>
-</nav>
+<nz-breadcrumb class="breadcrumb">
+    <nz-breadcrumb-item>
+        <a href="/home/dashboard">
+            <span nz-icon nzType="home"></span>
+        </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngFor="let path of pathArray">
+        <a [href]="[RouterLink(path)]">
+            <span>{{ path }}</span>
+        </a>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>

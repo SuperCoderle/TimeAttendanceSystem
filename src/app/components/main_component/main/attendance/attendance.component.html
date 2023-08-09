@@ -1,6 +1,6 @@
 <app-loading *ngIf="loading"></app-loading>
 <div class="body bg-white">
-    <div class="title border-bottom d-flex justify-content-between align-items-center">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
         <h4 class="m-1">Chấm công</h4>
     </div>
 
@@ -8,8 +8,10 @@
         <nz-card style="width:350px;" nzTitle="Trạng thái" [nzExtra]="extraTemplate">
             <div class="d-flex justify-content-between align-items-center py-2">
                 <span class="dot"></span>
-                <p class="status" *ngIf="schedule != null && schedule.timeIn == '00:00:00'">Bạn chưa chấm công</p>
-                <p class="status" *ngIf="schedule != null && (schedule.timeIn != '00:00:00' || schedule.timeIn != null && schedule.timeOut != '00:00:00')">Bạn đã chấm công lúc {{ schedule.timeOut == "00:00:00" ? schedule.timeIn : schedule.timeOut }}</p>
+                <div class="status" *ngIf="schedule != null">
+                    <p class="status" *ngIf="schedule.timeIn == '00:00:00'">Bạn chưa chấm công</p>
+                    <p class="status" *ngIf="schedule.timeIn != '00:00:00' || schedule.timeOut != '00:00:00'">Bạn đã chấm công lúc {{ schedule.timeOut == "00:00:00" ? schedule.timeIn : schedule.timeOut }}</p>
+                </div>
                 <p class="status" *ngIf="schedule == null">Không có lịch ngày hôm nay</p>
             </div>
 
@@ -24,8 +26,8 @@
             <ng-template #time>⏰</ng-template>
 
             <div class="d-flex justify-content-between align-items-center pb-3">
-                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="!activeCheckIn" (click)="check()">Chấm công vào</button>
-                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="!activeCheckOut" (click)="check()" nzDanger>Chấm công ra</button>
+                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule != null && schedule.isOpen == false" (click)="check()">Chấm công vào</button>
+                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule != null && schedule.isOpen == false" (click)="check()" nzDanger>Chấm công ra</button>
             </div>
         </nz-card>
         <ng-template #extraTemplate>

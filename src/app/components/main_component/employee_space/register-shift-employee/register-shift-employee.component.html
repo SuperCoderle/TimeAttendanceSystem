@@ -1,0 +1,61 @@
+<div class="body bg-white">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
+        <h4 class="m-1">Đăng ký ca</h4>
+    </div>
+
+    <form nz-form [formGroup]="validateForm" class="mt-4 w-100" (ngSubmit)="submit()">
+        <ng-container formArrayName="formArray">
+            <ng-container *ngFor="let control of formArray.controls; let i = index">
+                <div [formGroupName]="i">
+                    <nz-form-item>
+                        <nz-form-label [nzXs]="24" [nzSm]="4">
+                            Đăng ký ca {{ i + 1 }}
+                        </nz-form-label>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <nz-form-control [nzXs]="24" [nzSm]="20"
+                                nzErrorTip="Please input passenger's name or delete this field.">
+                                <nz-date-picker nzMode="date" class="passenger-input" formControlName="workDate"
+                                    nzPlaceHolder="Chọn thời gian"></nz-date-picker>
+                            </nz-form-control>
+    
+                            <nz-form-control [nzXs]="24" [nzSm]="20"
+                                nzErrorTip="Please input passenger's name or delete this field.">
+                                <nz-select class="passenger-input" formControlName="shift"
+                                    nzPlaceHolder="Chọn ca làm" nzAllowClear>
+                                    <nz-option *ngFor="let shift of shifts" [nzValue]="shift.shiftID"
+                                        [nzLabel]="shift.shiftName + ' ( ' + shift.startTime + ' - ' + shift.endTime + ' )'"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+    
+                            <nz-form-control [nzXs]="24" [nzSm]="20">
+                                <input class="passenger-input" nz-input placeholder="placeholder"
+                                    formControlName="description" />
+                            </nz-form-control>
+                        </div>
+                        <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i)"></span>
+    
+                        <button nz-button class="remove-button" (click)="removeField(i)">
+                            <span nz-icon nzType="delete"></span>
+                            Xóa
+                        </button>
+                    </nz-form-item>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <nz-form-item>
+            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                <button nz-button type="button" nzType="dashed" class="add-button" (click)="addField()">
+                    <span nz-icon nzType="plus"></span>
+                    Thêm mới
+                </button>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                <button nz-button nzType="primary">Submit</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>

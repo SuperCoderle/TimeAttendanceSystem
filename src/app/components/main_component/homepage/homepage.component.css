@@ -2,7 +2,7 @@
     transition: all 0.5s ease;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 600px) {
     .menu-mobile {
         padding: 0.5rem !important;
     }

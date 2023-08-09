@@ -1,11 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subject } from 'rxjs';
 import { Violation } from 'src/app/models/dto';
 import { ViolationColumnList } from 'src/app/models/listOfColumn';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
-import { CheckStatusCode } from 'src/app/status/status';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -14,12 +13,11 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./violation.component.css']
 })
 export class ViolationComponent {
-  constructor(private router: Router, 
+  constructor(
               private nzMessageService: NzMessageService,
               private useService: UseServiceService) { }
 
   //Declare variables
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   loading = false;
   indeterminate = false;
   listOfColumn = ViolationColumnList;
@@ -39,7 +37,8 @@ export class ViolationComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
+        this.loading = false; 
+        console.log(error);
       }
     });
   }
@@ -82,8 +81,6 @@ export class ViolationComponent {
   }
 
   async saveEdit(id: number) {
-    // const index = this.listOfData.findIndex(item => item.id === id);
-    // Object.assign(this.listOfData[index], this.editCache[id].data);
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     await this.useService.putData(`Violations/${this.editCache[id].data.violationID}`, this.editCache[id].data)
       .subscribe({
@@ -105,7 +102,6 @@ export class ViolationComponent {
 
   updateEditCache(): void {
     this.violations.forEach(item => {
-      console.log(item);
       this.editCache[item.violationID] = {
         edit: false,
         data: { ...item }
@@ -122,10 +118,8 @@ export class ViolationComponent {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại
-    XLSX.writeFile(wb, 'Payrol.xlsx');
+    XLSX.writeFile(wb, 'Lỗi.xlsx');
   }
 
-  ngOnInit(): void {
-    this.handleLoadData();
-  }
+  ngOnInit(): void {}
 }

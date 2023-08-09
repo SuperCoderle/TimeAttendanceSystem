@@ -21,7 +21,6 @@
 }
 
 button {
-    margin: 0 8px 8px 0;
     border: none;
 }
 
@@ -39,4 +38,31 @@ button {
 
 .delete-btn {
     background: var(--delete-color);
+}
+
+.table-mobile {
+    display: none;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+    .view {
+        display: none;
+    }
+
+    .table-mobile {
+        display: block;
+    }
+
+    .table-mobile button {
+        background: transparent;
+    }
 }

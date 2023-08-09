@@ -1,12 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee, User, Payroll } from 'src/app/models/dto';
 import { v4 as uuid } from 'uuid';
 import jwt_decode from 'jwt-decode';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { CheckStatusCode } from 'src/app/status/status';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
 @Component({
@@ -16,9 +15,9 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
 })
 export class FormComponent {
   //Declare Variables
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
+  loading = false;
   validateForm: UntypedFormGroup;
-  employeeID: string | null = null;
+  employeeID: string = '';
   title: String = "";
   token?: string | null = localStorage.getItem("token");
   user: any;
@@ -47,30 +46,34 @@ export class FormComponent {
       basicSalary: 85000000
     }
   ]
-  employee: Employee = {
-    employeeID: uuid(),
-    fullname: '',
-    birthday: new Date(),
-    gender: '',
-    phoneNumber: '',
-    createdAt: new Date(),
-    createdBy: '',
-    lastUpdatedAt: null,
-    lastUpdatedBy: null
-  };
+  employee: any;
 
   //Constructor
-  constructor(private formBuilder: UntypedFormBuilder, 
-              private router: Router, 
-              private activeRoute: ActivatedRoute, 
-              private useService: UseServiceService,
-              private nzMessageService: NzMessageService) 
-  {
+  constructor(private formBuilder: UntypedFormBuilder,
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private useService: UseServiceService,
+    private nzMessageService: NzMessageService) {
     if (this.token != null) {
       this.user = jwt_decode(this.token);
     }
 
     this.width = window.innerWidth;
+
+    this.activeRoute.paramMap.subscribe(params => {
+      this.loading = true;
+      if(params.get('id') != null || params.get('id') != undefined)
+      {
+        this.employeeID = params.get('id')!;
+        this.getEmployee(params.get('id')!);
+        this.title = "Cập nhật thông tin nhân viên"
+      }
+      else
+      {
+        this.loading = false;
+        this.title = "Thêm nhân viên";
+      }
+    });
 
     this.validateForm = this.formBuilder.group({
       fullname: ['', [Validators.required]],
@@ -83,13 +86,6 @@ export class FormComponent {
       confirm: ['', [this.confirmValidator]],
       isManager: [false]
     });
-
-    this.activeRoute.paramMap.subscribe(params => {
-      this.employeeID = params.get('id');
-    })
-
-    this.employeeID != null ? this.title = "Cập nhật thông tin nhân viên" : this.title = "Thêm nhân viên";
-    this.getEmployee();
   }
 
   //Methos
@@ -123,15 +119,19 @@ export class FormComponent {
       employeeID: newEmp.employeeID
     }
 
+    const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.postData("TbUsers/", newUser)
       .subscribe({
         next: (result) => {
           this.createNewEmp(newEmp);
           this.addToPayroll(newPay);
-          this.router.navigate(['/home/employee']);
+          window.history.back();
+          this.nzMessageService.remove(id);
+          this.nzMessageService.success("Tạo thành công");
         },
         error: (error: HttpErrorResponse) => {
-          this.nzMessageService.error(error.error);
+          this.nzMessageService.remove(id);
+          console.log(error);
         }
       })
   }
@@ -145,8 +145,7 @@ export class FormComponent {
       })
   }
 
-  async addToPayroll(newPay: Payroll)
-  {
+  async addToPayroll(newPay: Payroll) {
     await this.useService.postData("Payrolls/", newPay)
       .subscribe({
         error: (error: HttpErrorResponse) => {
@@ -155,23 +154,31 @@ export class FormComponent {
       })
   }
 
-  async getEmployee() {
-    if (this.employeeID != null) {
-      await this.useService.getData(`Employees/${this.employeeID}`)
-        .subscribe({
-          next: (result) => {
+  async getEmployee(empID: string) {
+    await this.useService.getData(`Employees/${empID}`)
+      .subscribe({
+        next: (result: Employee) => {
+          setTimeout(() => {
             this.employee = result;
-          },
-          error: (error: HttpErrorResponse) => {
-            this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
-          }
-        })
-    }
+            this.validateForm = this.formBuilder.group({
+              fullname: [result.fullname, [Validators.required]],
+              birthday: [result.birthday, Validators.required],
+              gender: [result.gender, [Validators.required]],
+              phoneNumber: [result.phoneNumber, [Validators.required, Validators.maxLength(11)]]
+            });
+            this.loading = false;
+          }, 600);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false;
+          console.log(error);
+        }
+      })
   }
 
   async update() {
     const data: Employee = {
-      employeeID: this.employee.employeeID,
+      employeeID: this.employeeID,
       fullname: this.validateForm.controls["fullname"].value,
       birthday: new Date(this.validateForm.controls["birthday"].value),
       gender: this.validateForm.controls["gender"].value,
@@ -182,10 +189,15 @@ export class FormComponent {
       lastUpdatedBy: this.user["fullname"]
     }
 
+    const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.putData(`Employees/${data.employeeID}`, data)
       .subscribe({
         next: (result) => {
-          this.router.navigate(['/home/employee']);
+          setTimeout(() => {
+            this.nzMessageService.remove(id);
+            window.history.back();
+            this.nzMessageService.success("Cập nhật thành công.");
+          }, 600);
         },
         error: (error) => {
           console.log(error);

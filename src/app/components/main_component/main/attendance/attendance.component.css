@@ -20,3 +20,9 @@ nz-card {
 	line-height:1.375;
     text-align: center;
 }
+
+@media screen and (max-width: 600px) {
+    nz-card {
+        width: 100% !important;
+    }
+}

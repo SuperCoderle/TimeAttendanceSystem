@@ -1,0 +1,70 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="body bg-white">
+    <div class="title border-bottom d-flex justify-content-between align-items-center mb-3 pb-1">
+        <h4 class="m-1">Thông tin cá nhân</h4>
+
+        <div class="div-btn">
+            <button nz-button [routerLink]="['edit/', employee.employeeID]">
+                <span nz-icon nzType="edit"></span>
+                EDIT INFO
+            </button>
+        </div>
+    </div>
+
+    <ng-container>
+        <nz-descriptions [nzColumn]="width <= 600 ? 1 : 2" nzTitle="Nhân viên">
+            <nz-descriptions-item nzTitle="Họ và tên" [nzSpan]="1">{{ employee.fullname }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Email" [nzSpan]="1">{{ user.email }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Giới tính" [nzSpan]="1">{{ employee.gender }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Số điện thoại" [nzSpan]="1">{{ employee.phoneNumber }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ngày sinh" [nzSpan]="1">{{ dateFormat(employee.birthday) }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Mật khẩu" [nzSpan]="1"><a href="javascript:;" (click)="show()">Đổi mật khẩu</a></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Mô tả" [nzSpan]="2">
+                Make things as simple as possible but no simpler.
+            </nz-descriptions-item>
+
+            <nz-modal
+                [(nzVisible)]="isVisible"
+                nzTitle="Đổi mật khẩu"
+                nzOkText="Ok"
+                nzCancelText="Cancel"
+                (nzOnOk)="handleOk()"
+                (nzOnCancel)="handleCancel()"
+            >
+                <ng-container *nzModalContent>
+                    <form nz-form [formGroup]="validateForm">
+                        <nz-form-item>
+                            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Mật khẩu cũ</nz-form-label>
+                            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." nzErrorTip="Hãy nhập mật khẩu!">
+                                <input nz-input type="password" formControlName="oldPassword" placeholder="Mật khẩu cũ" />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label class="text-start" [nzSpan]="width > 600 && width <= 1024 ? 7 : 6" nzRequired>Mật khẩu mới</nz-form-label>
+                            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." nzErrorTip="Hãy nhập mật khẩu!">
+                                <input nz-input type="password" formControlName="newPassword" placeholder="Mật khẩu mới" />
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+                </ng-container>
+            </nz-modal>
+        </nz-descriptions>
+        <nz-divider></nz-divider>
+        <nz-descriptions [nzColumn]="width <= 600 ? 1 : 2" nzTitle="Chức vụ và làm việc">
+            <nz-descriptions-item nzTitle="Tên" [nzSpan]="1">{{ payroll.position }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Lương cơ bản" [nzSpan]="1">{{ payroll.basicSalary | currency: 'VND': 'symbol': '4.0-2' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ngày thuê" [nzSpan]="1">{{ dateFormat(employee.createdDate) }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Trạng thái" [nzSpan]="1">Đang làm việc</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Tổng giờ làm" [nzSpan]="1">{{ totalWorkHours().total }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Tổng số lần vi phạm" [nzSpan]="1">{{ totalWorkHours().violation }}</nz-descriptions-item>
+        </nz-descriptions>
+        <nz-divider></nz-divider>
+        <nz-descriptions [nzColumn]="width <= 600 ? 1 : 2" nzTitle="Khác">
+            <nz-descriptions-item nzTitle="Thông tin được đăng ký" [nzSpan]="1">AntDesign@example.com</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Thông tin liên hệ" [nzSpan]="1">+86 181 0000 0000</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Quản lý bởi" [nzSpan]="1">+86 181 0000 0000</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Số điện thoại" [nzSpan]="1">+86 181 0000 0000</nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+</div>

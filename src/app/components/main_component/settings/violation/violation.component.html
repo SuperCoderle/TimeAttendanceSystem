@@ -1,5 +1,5 @@
 <div class="body bg-white">
-    <div class="title border-bottom d-flex justify-content-between align-items-center">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
         <h4 class="m-1">Quản lý vi phạm</h4>
     </div>
 
@@ -23,7 +23,8 @@
         <nz-dropdown-menu #export="nzDropdownMenu">
             <ul nz-menu>
                 <li nz-menu-item><span nz-icon nzType="file-pdf" nzTheme="outline"></span> PDF</li>
-                <li nz-menu-item (click)="exportXLSX()"><span nz-icon nzType="file-excel" nzTheme="outline"></span> Excel</li>
+                <li nz-menu-item (click)="exportXLSX()"><span nz-icon nzType="file-excel" nzTheme="outline"></span>
+                    Excel</li>
             </ul>
         </nz-dropdown-menu>
 
@@ -48,23 +49,17 @@
             <tr *ngFor="let data of rowSelectionTable.data">
                 <ng-container *ngIf="!editCache[data.violationID].edit; else editTemplate">
                     <td>{{ data.violationID }}</td>
-                    <td>{{ data.typeOfViolation }}</td>
-                    <td>{{ data.amountDeducted }}</td>
+                    <td>{{ data.violationError }}</td>
                     <td class="text-center">
                         <div class="d-flex w-100 justify-content-between align-items-center">
-                            <button nz-button nzType="primary" (click)="startEdit(data.violationID)" nzTooltipTitle="Chỉnh sửa" nzTooltipPlacement="top" nz-tooltip>
+                            <button nz-button nzType="primary" (click)="startEdit(data.violationID)"
+                                nzTooltipTitle="Chỉnh sửa" nzTooltipPlacement="top" nz-tooltip>
                                 <span class="text-white" nz-icon nzType="edit" nzTheme="outline"></span>
                             </button>
-                            <button 
-                                nz-button 
-                                nzType="primary" 
-                                nz-popconfirm 
-                                [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.typeOfViolation + '?'"
-                                (nzOnConfirm)="confirm(data.violationID)"
-                                (nzOnCancel)="cancel()"
-                                nzDanger 
-                                nzTooltipTitle="Xóa"
-                                nz-tooltip>
+                            <button nz-button nzType="primary" nz-popconfirm
+                                [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.violationError + '?'"
+                                (nzOnConfirm)="confirm(data.violationID)" (nzOnCancel)="cancel()" nzDanger
+                                nzTooltipTitle="Xóa" nz-tooltip>
                                 <span class="text-white" nz-icon nzType="delete" nzTheme="outline"></span>
                             </button>
                         </div>
@@ -72,8 +67,8 @@
                 </ng-container>
                 <ng-template #editTemplate>
                     <td>{{ data.violationID }}</td>
-                    <td><input type="text" nz-input [(ngModel)]="editCache[data.violationID].data.typeOfViolation" /></td>
-                    <td><input type="text" nz-input [(ngModel)]="editCache[data.violationID].data.amountDeducted" /></td>
+                    <td><input type="text" nz-input [(ngModel)]="editCache[data.violationID].data.violationError" />
+                    </td>
                     <td>
                         <a (click)="saveEdit(data.violationID)" class="save">Save</a>
                         <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?"

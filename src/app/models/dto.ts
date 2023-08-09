@@ -35,7 +35,9 @@ export interface Schedule {
     description: string,
     employeeID: string,
     totalWorkHours: number,
-    status: string,
+    isInProgress: boolean,
+    isSubmit: boolean,
+    isOpen: boolean,
     violationID?: number | null,
     approvedAt?: Date | null,
     approvedBy?: string | null,
@@ -46,8 +48,7 @@ export interface Schedule {
 //Violation
 export interface Violation {
     violationID: number,
-    typeOfViolation: string,
-    amountDeducted: number
+    violationError: string
 }
 
 //Payroll
@@ -63,8 +64,10 @@ export interface Menu {
     menuID: number,
     title: string,
     url: string,
-    parent: string,
+    icon: string,
+    parentID: number,
     isActive: boolean,
+    isSubmenu: boolean,
     createdAt: Date,
     lastUpdatedAt?: Date | null,
     lastUpdatedBy?: string | null
@@ -90,4 +93,10 @@ export interface Report {
     createdAt: Date,
     lastUpdatedAt?: Date,
     lastUpdatedBy?: string
+}
+
+//Password
+export interface Password {
+    oldPassword: string,
+    newPassword: string
 }

@@ -1,5 +1,5 @@
 <div class="body bg-white">
-    <div class="title border-bottom d-flex justify-content-between align-items-center">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
         <h4 class="m-1">Báo cáo</h4>
     </div>
 
@@ -45,7 +45,7 @@
                 <td>{{ i + 1 }}</td>
                 <td>{{ getEmployeeName(data.employeeID) }}</td>
                 <td>{{ data.title }}</td>
-                <td>{{ data.grossPay }}</td>
+                <td>{{ data.grossPay | currency: 'VND': 'symbol': '4.0-2' }}</td>
                 <td>{{ data.paidStatus }}</td>
                 <td class="text-center d-flex">
                     <button nz-button nzType="primary" (click)="open()"><span nz-icon nzType="info-circle" nzTheme="outline"></span></button>

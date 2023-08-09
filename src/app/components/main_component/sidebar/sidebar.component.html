@@ -4,34 +4,34 @@
         <img class="logo" src="../../../../assets/image/logo_exam.png" alt="" />
     </a>
     <p class="title m-0">Trang admin quản lý chấm công</p>
-    <ul nzMode="inline" nz-menu [nzInlineCollapsed]="width > 480 && width <= 1024 ? true : false"
-        class="nav nav-pills flex-column mb-auto mt-4">
-        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['dashboard']" *ngIf="isAdmin()">
-            <span nz-icon nzType="home" nzTheme="outline"></span>
-            <span style="margin-left: 10px;">Dashboard</span>
+    <ul nzMode="inline" nz-menu [nzInlineCollapsed]="width > 600 && width <= 1024 ? true : false"
+        class="nav nav-pills flex-column mb-auto mt-4 position-relative">
+
+        <li *ngIf="loading" class="loading">
+            <ng-template #indicatorTemplate>
+                <span nz-icon nzType="loading"></span>
+                <span style="margin-left: 10px;">Đang tải</span>
+            </ng-template>
+            <nz-spin nzSimple [nzIndicator]="indicatorTemplate"></nz-spin>
         </li>
-        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['attendance']" *ngIf="!isAdmin()">
-            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-            <span style="margin-left: 10px;">Chấm công</span>
+
+        <li class="nav-item align-items-center w-100" nz-menu-item *ngFor="let menu of parentMenu()"
+            [routerLink]="menu.url">
+            <span nz-icon [nzType]="menu.icon" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">{{ menu.title }}</span>
         </li>
-        <li class="nav-item align-items-center w-100" nz-submenu nzTitle="Nhân viên" nzIcon="team">
-            <ul *ngFor="let menu of newMenus('Nhân viên')">
+
+        <li class="nav-item align-items-center w-100" nz-submenu="false" *ngFor="let menu of submenu()"
+            [nzTitle]="menu.title" [nzIcon]="menu.icon">
+            <ul *ngFor="let menu of childMenu(menu.menuID)">
                 <li nz-menu-item [routerLink]="menu.url">{{ menu.title }}</li>
             </ul>
         </li>
-        <li class="nav-item align-items-center w-100" nz-menu-item [routerLink]="['calendar']">
-            <span nz-icon nzType="calendar" nzTheme="outline"></span>
-            <span style="margin-left: 10px;">Lịch làm việc</span>
-        </li>
-        <li class="nav-item align-items-center w-100" *ngIf="isAdmin()" nz-menu-item
-            [routerLink]="['report']">
-            <span nz-icon nzType="stock" nzTheme="outline"></span>
-            <span style="margin-left: 10px;">Báo cáo</span>
-        </li>
-        <li class="nav-item align-items-center w-100" *ngIf="isAdmin()" nz-submenu nzTitle="Cài đặt" nzIcon="setting">
-            <ul *ngFor="let menu of newMenus('Cài đặt')">
-                <li nz-menu-item [routerLink]="menu.url">{{ menu.title }}</li>
-            </ul>
+
+        <li class="nav-item align-items-center w-100" nz-menu-item *ngIf="width <= 600"
+            routerLink="">
+            <span nz-icon nzType="logout" nzTheme="outline"></span>
+            <span style="margin-left: 10px;">Đăng xuất</span>
         </li>
     </ul>
 

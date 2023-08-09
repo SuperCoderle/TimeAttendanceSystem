@@ -35,17 +35,18 @@ header div .user p {
     line-height: normal;
 }
 
-.breadcrumb {
+nz-breadcrumb {
     padding: 1.4rem 2rem;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 600px) {
     .breadcrumb {
         padding-top: 0 !important;
     }
+
     header,
     .breadcrumb {
-        padding: 1rem 0.5rem;
+        padding: 1rem 0.5rem !important;
     }
 
     .toolbar form {

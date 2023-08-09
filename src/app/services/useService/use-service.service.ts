@@ -1,27 +1,16 @@
 import { HttpClient, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Token } from 'src/app/models/token';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UseServiceService implements HttpInterceptor {
+export class UseServiceService{
   //Constructor
   constructor(
     private http: HttpClient
   ) { }
-
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    request = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    return next.handle(request);
-  }
 
   //Declare Variables
   url: string = environment.api_url;

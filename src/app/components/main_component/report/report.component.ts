@@ -6,7 +6,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as XLSX from 'xlsx'
-import { CheckStatusCode } from 'src/app/status/status';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
 
@@ -17,14 +16,13 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
 })
 export class ReportComponent implements OnInit {
   //Constructor
-  constructor(private router: Router,
+  constructor(
               private nzMessageService: NzMessageService,
               private useService: UseServiceService) {
     
   }
 
   //Decalre Variable
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   loading = false;
   indeterminate = false;
   listOfColumn = ReportColumnList;
@@ -47,8 +45,8 @@ export class ReportComponent implements OnInit {
   dateTimeFormat(date: Date): string {
     return moment(date).format("MMM, DD YYYY  LT");
   }
-  getEmployeeName(id: string): string {
-    let fullname = this.employees.find(emp => emp.employeeID === id)!.fullname;
+  getEmployeeName(id: string): string | undefined {
+    let fullname = this.employees.find(emp => emp.employeeID === id) != null ? this.employees.find(emp => emp.employeeID === id)?.fullname : "";
     return fullname;
   }
 
@@ -63,7 +61,8 @@ export class ReportComponent implements OnInit {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
+        this.loading = false; 
+        console.log(error);
       }
     });
     await this.useService.getData("Employees/").subscribe({
@@ -73,7 +72,7 @@ export class ReportComponent implements OnInit {
         }, 600);
       },
       error: (error:HttpErrorResponse) => {
-        this.checkStatusCode.ErrorResponse(error.status) ? "" : console.log(error);
+        console.log(error);
       }
     })
   }
@@ -118,7 +117,7 @@ export class ReportComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại
-    XLSX.writeFile(wb, 'Nhân viên.xlsx');
+    XLSX.writeFile(wb, 'Báo cáo.xlsx');
   }
 
   ngOnInit(): void {

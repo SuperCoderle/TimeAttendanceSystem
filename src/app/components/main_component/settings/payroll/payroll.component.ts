@@ -5,7 +5,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee, Payroll } from 'src/app/models/dto';
 import { PayrollColumnList } from 'src/app/models/listOfColumn';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
-import { CheckStatusCode } from 'src/app/status/status';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -16,12 +15,10 @@ import * as XLSX from 'xlsx';
 
 export class PayrollComponent {
   constructor( 
-              private router: Router, 
               private nzMessageService: NzMessageService,
               private useService: UseServiceService) { }
 
   //Declare variables
-  checkStatusCode: CheckStatusCode = new CheckStatusCode(this.router);
   loading = false;
   indeterminate = false;
   listOfColumn = PayrollColumnList;
@@ -45,7 +42,8 @@ export class PayrollComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
+        this.loading = false; 
+        console.log(error);
       }
     });
     await this.useService.getData("Employees/").subscribe({
@@ -57,7 +55,8 @@ export class PayrollComponent {
         }, 600);
       },
       error: (error: HttpErrorResponse) => {
-        this.checkStatusCode.ErrorResponse(error.status) ? "" : this.loading = false; console.log(error);
+        this.loading = false; 
+        console.log(error);
       }
     });
   }
@@ -121,7 +120,6 @@ export class PayrollComponent {
 
   updateEditCache(): void {
     this.payrolls.forEach(item => {
-      console.log(item);
       this.editCache[item.payRollID] = {
         edit: false,
         data: { ...item }
@@ -138,7 +136,7 @@ export class PayrollComponent {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại
-    XLSX.writeFile(wb, 'Payrol.xlsx');
+    XLSX.writeFile(wb, 'Bảng lương.xlsx');
   }
 
   ngOnInit(): void {

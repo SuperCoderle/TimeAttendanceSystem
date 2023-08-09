@@ -1,5 +1,5 @@
 <div class="body bg-white">
-    <div class="title border-bottom d-flex justify-content-between align-items-center">
+    <div class="title border-bottom d-flex justify-content-between align-items-center pb-1">
         <h4 class="m-1">Nhân viên</h4>
 
         <div class="view position-relative">
@@ -13,35 +13,43 @@
 
     <div class="d-flex btn-options mt-3">
         <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="add" class="d-flex align-items-center">
-            Thêm mới
+            <span *ngIf="width > 600">Thêm mới</span>
             <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
         <nz-dropdown-menu #add="nzDropdownMenu">
             <ul nz-menu>
                 <li nz-menu-item><a [routerLink]="['/home/employee/employeeform']">Thêm nhân viên</a></li>
-                <li nz-menu-item>Nhập từ file excel</li>
+                <li nz-menu-item>
+                    <label for="file-upload" class="custom-file-upload">
+                        Từ file excel
+                    </label>
+                    <input type="file" name="file" id="file-upload" [(ngModel)]="currentFile" accept=".xls, .xlsx" (change)="onFileSelected($event)" /></li>
                 <li nz-menu-item>menu1 3rd menu item</li>
             </ul>
         </nz-dropdown-menu>
 
-        <button nz-button nzType="primary" nzDanger nz-dropdown [nzDropdownMenu]="export" class="d-flex align-items-center">
-            Xuất
-            <span nz-icon nzType="plus" nzTheme="outline"></span>
+        <button nz-button nzType="primary" nzDanger nz-dropdown [nzDropdownMenu]="export"
+            class="ms-1 d-flex align-items-center">
+            <span *ngIf="width > 600">Xuất</span>
+            <span nz-icon nzType="export" nzTheme="outline"></span>
         </button>
         <nz-dropdown-menu #export="nzDropdownMenu">
             <ul nz-menu>
                 <li nz-menu-item><span nz-icon nzType="file-pdf" nzTheme="outline"></span> PDF</li>
-                <li nz-menu-item (click)="exportXLSX()"><span nz-icon nzType="file-excel" nzTheme="outline"></span> Excel</li>
+                <li nz-menu-item (click)="exportXLSX()"><span nz-icon nzType="file-excel" nzTheme="outline"></span>
+                    Excel</li>
             </ul>
         </nz-dropdown-menu>
 
-        <button nz-button nzType="primary" class="d-flex align-items-center ms-auto" [disabled]="loading" (click)="handleReload()">
-            Tải lại
+        <button nz-button nzType="primary" class="d-flex align-items-center ms-auto" [disabled]="loading"
+            (click)="handleReload()">
+            <span *ngIf="width > 600">Tải lại</span>
             <span nz-icon nzType="reload" nzTheme="outline"></span>
         </button>
     </div>
 
-    <nz-table #rowSelectionTable id="table" [nzLoading]="loading" nzShowSizeChanger [nzData]="employees">
+    <nz-table #rowSelectionTable id="table" *ngIf="width > 600" [nzLoading]="loading" nzShowSizeChanger
+        [nzData]="employees">
         <thead>
             <tr>
                 <th>#</th>
@@ -60,22 +68,82 @@
                 <td>{{ data.gender }}</td>
                 <td>{{ data.phoneNumber }}</td>
                 <td class="text-center d-flex align-items-center">
-                    <button nz-button nzType="primary"><span nz-icon nzType="info-circle" nzTheme="outline"></span></button>
-                    <button class="edit-btn" nz-button nzType="primary" [routerLink]="['/home/employee/employeeform/', data.employeeID]"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
-                    <button 
-                        class="delete-btn"
-                        nz-button
-                        nzType="primary"
-                        nz-popconfirm
+                    <button nz-button nzType="primary" (click)="open()"><span nz-icon nzType="info-circle"
+                            nzTheme="outline"></span></button>
+                    <button class="edit-btn mx-1" nz-button nzType="primary"
+                        [routerLink]="['/home/employee/employeeform/', data.employeeID]"><span nz-icon nzType="edit"
+                            nzTheme="outline"></span></button>
+                    <button class="delete-btn" nz-button nzType="primary" nz-popconfirm
                         [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.fullname + '?'"
-                        (nzOnConfirm)="confirm(data.employeeID)"
-                        (nzOnCancel)="cancel()"
-                        nzPopconfirmPlacement="top"
-                    >
+                        (nzOnConfirm)="confirm(data.employeeID)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="top">
                         <span nz-icon nzType="delete" nzTheme="outline"></span>
                     </button>
                 </td>
+                <nz-drawer [nzVisible]="visible" [nzWidth]="640" [nzClosable]="false" (nzOnClose)="close()">
+                    <ng-container *nzDrawerContent>
+                        <p class="title" style=" margin-bottom: 24px;">User Profile</p>
+                        <nz-descriptions [nzColumn]="2" nzTitle="Personal">
+                            <nz-descriptions-item nzTitle="Họ tên" [nzSpan]="1">{{ data.fullname
+                                }}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Account"
+                                [nzSpan]="1">AntDesign@example.com</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="City" [nzSpan]="1">HangZhou</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Country" [nzSpan]="1">China🇨🇳</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Birthday" [nzSpan]="1">February 2,1900</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Website" [nzSpan]="1">-</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Message" [nzSpan]="2">
+                                Make things as simple as possible but no simpler.
+                            </nz-descriptions-item>
+                        </nz-descriptions>
+                        <nz-divider></nz-divider>
+                        <nz-descriptions [nzColumn]="2" nzTitle="Company">
+                            <nz-descriptions-item nzTitle="Position" [nzSpan]="1">Programmer</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Responsibilities" [nzSpan]="1">Coding</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Department" [nzSpan]="1">AFX</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Supervisor" [nzSpan]="1">Lin</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Skills" [nzSpan]="2">
+                                C / C + +, data structures, software engineering, operating systems, computer networks,
+                                databases,
+                                compiler
+                                theory, computer architecture, Microcomputer Principle and Interface Technology,
+                                Computer English,
+                                Java,
+                                ASP, etc.
+                            </nz-descriptions-item>
+                        </nz-descriptions>
+                        <nz-divider></nz-divider>
+                        <nz-descriptions [nzColumn]="2" nzTitle="Contacts">
+                            <nz-descriptions-item nzTitle="Email"
+                                [nzSpan]="1">AntDesign@example.com</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Phone Number" [nzSpan]="1">+86 181 0000
+                                0000</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Github" [nzSpan]="2">
+                                <a href="https://github.com/NG-ZORRO/ng-zorro-antd"
+                                    target="_blank">github.com/NG-ZORRO/ng-zorro-antd</a>
+                            </nz-descriptions-item>
+                        </nz-descriptions>
+                    </ng-container>
+                </nz-drawer>
             </tr>
         </tbody>
     </nz-table>
+
+    <nz-card *ngFor="let emp of employees" [nzTitle]="emp.fullname" class="table-mobile mt-2"
+        [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+        <nz-card-meta nzTitle="Card title" nzDescription="This is the description"></nz-card-meta>
+        <ng-template #actionSetting>
+            <button (click)="open()"><span nz-icon nzType="info-circle"></span></button>
+        </ng-template>
+        <ng-template #actionEdit>
+            <button [routerLink]="['/home/employee/employeeform/', emp.employeeID]"><span nz-icon nzType="edit"></span></button>
+        </ng-template>
+        <ng-template #actionEllipsis>
+            <button
+                nz-popconfirm
+                [nzPopconfirmTitle]="'Bạn có muốn xóa ' + emp.fullname + '?'"
+                (nzOnConfirm)="confirm(emp.employeeID)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="bottom">
+                <span nz-icon nzType="delete"></span>
+            </button>
+        </ng-template>
+    </nz-card>
 </div>

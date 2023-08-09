@@ -1,15 +1,13 @@
 import { MbscModule } from '@mobiscroll/angular';
 import { HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { EmployeeComponent } from './components/main_component/employee_space/employee/employee.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/main_component/login/login.component';
-import { HeaderComponent } from './components/main_component/header/header.component';
 import { HomepageComponent } from './components/main_component/homepage/homepage.component';
 import { SidebarComponent } from './components/main_component/sidebar/sidebar.component';
 import { TopComponent } from './components/main_component/top/top.component';
@@ -109,8 +107,11 @@ import { ViolationComponent } from './components/main_component/settings/violati
 import { PayrollComponent } from './components/main_component/settings/payroll/payroll.component';
 import { AttendanceComponent } from './components/main_component/main/attendance/attendance.component';
 import { ReportComponent } from './components/main_component/report/report.component';
-import { InformationComponent } from './components/main_component/employee_space/information/information.component';
-import { UseServiceService } from './services/useService/use-service.service';
+import { InformationComponent } from './components/main_component/information/information.component';
+import { MenuComponent } from './components/main_component/settings/menu/menu.component';
+import { initializeApp } from './helpers/app.initializer';
+import { TokenInterceptorService } from './services/tokenInterceptor/token-interceptor.service';
+import { RegisterShiftEmployeeComponent } from './components/main_component/employee_space/register-shift-employee/register-shift-employee.component';
 
 registerLocaleData(vi);
 
@@ -121,9 +122,7 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeComponent,
     LoginComponent,
-    HeaderComponent,
     HomepageComponent,
     SidebarComponent,
     TopComponent,
@@ -143,7 +142,9 @@ export function tokenGetter() {
     PayrollComponent,
     AttendanceComponent,
     ReportComponent,
-    InformationComponent
+    InformationComponent,
+    MenuComponent,
+    RegisterShiftEmployeeComponent
   ],
   imports: [  
     MbscModule, 
@@ -234,7 +235,7 @@ export function tokenGetter() {
     { provide: NZ_I18N, useValue: vi_VN },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: UseServiceService,
+      useClass: TokenInterceptorService,
       multi: true
     }
   ],
