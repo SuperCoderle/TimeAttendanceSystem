@@ -1,8 +1,8 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MbscModule } from '@mobiscroll/angular';
 import { HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -92,16 +92,13 @@ import { NzGraphModule } from 'ng-zorro-antd/graph';
 import { NzCronExpressionModule } from 'ng-zorro-antd/cron-expression';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
-import { HistoryComponent } from './components/main_component/history/history.component';
 import { CalendarComponent } from './components/main_component/work_schedule/calendar/calendar.component';
-import { SalaryComponent } from './components/main_component/employee_space/salary/salary.component';
 import { OverviewComponent } from './components/main_component/employee_space/overview/overview.component';
 import { LoadingComponent } from './components/main_component/loading/loading.component';
 import { NotfoundComponent } from './components/main_component/errors/notfound/notfound.component';
 import { ForbiddenComponent } from './components/main_component/errors/forbidden/forbidden.component';
 import { FormComponent } from './components/main_component/employee_space/form/form.component';
 import { RegisterShiftComponent } from './components/main_component/employee_space/register-shift/register-shift.component';
-import { AuthorityComponent } from './components/main_component/settings/authority/authority.component';
 import { StaffCalendarComponent } from './components/main_component/work_schedule/staff-calendar/staff-calendar.component';
 import { ViolationComponent } from './components/main_component/settings/violation/violation.component';
 import { PayrollComponent } from './components/main_component/settings/payroll/payroll.component';
@@ -127,16 +124,13 @@ export function tokenGetter() {
     SidebarComponent,
     TopComponent,
     DashboardComponent,
-    HistoryComponent,
     CalendarComponent,
-    SalaryComponent,
     OverviewComponent,
     LoadingComponent,
     NotfoundComponent,
     ForbiddenComponent,
     FormComponent,
     RegisterShiftComponent,
-    AuthorityComponent,
     StaffCalendarComponent,
     ViolationComponent,
     PayrollComponent,

@@ -3,12 +3,12 @@
         <h4 class="m-1">Quản lý menu</h4>
     </div>
 
-    <div class="d-flex btn-options mt-3">
+    <div class="d-flex btn-options my-3">
 
         <button nz-button nzType="primary" nzDanger nz-dropdown [nzDropdownMenu]="export"
             class="d-flex align-items-center">
-            Xuất
-            <span nz-icon nzType="plus" nzTheme="outline"></span>
+            <span>Xuất</span>
+            <span nz-icon nzType="export" nzTheme="outline"></span>
         </button>
         <nz-dropdown-menu #export="nzDropdownMenu">
             <ul nz-menu>
@@ -21,42 +21,68 @@
         <div class="d-flex align-items-center ms-auto">
             <button nz-button nzType="primary" class="d-flex align-items-center" [disabled]="loading"
                 (click)="handleReload()">
-                Tải lại
+                <span>Tải lại</span>
                 <span nz-icon nzType="reload" nzTheme="outline"></span>
             </button>
         </div>
 
     </div>
 
-    <nz-table #rowSelectionTable id="table" [nzLoading]="loading" nzShowSizeChanger [nzData]="menus">
+    <nz-table #rowSelectionTable id="table" [nzLoading]="loading" nzShowSizeChanger [nzData]="menus"
+        [nzScroll]="width <= 600 ? { x:'880px'} : width <= 1024 ? { x:'1080px'} : { }"
+    >
         <thead>
             <tr>
-                <th>#</th>
+                <th class="text-center" style="width: 5%">#</th>
                 <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">
                     {{ column.title }}
                 </th>
-                <th style="width: 10%;" class="text-center"></th>
+                <th nzRight style="width: 10%;"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let data of rowSelectionTable.data">
                 <ng-container *ngIf="!editCache[data.menuID].edit; else editTemplate">
-                    <td>{{ data.menuID }}</td>
+                    <td class="text-center">{{ data.menuID }}</td>
                     <td>{{ data.title }}</td>
                     <td>{{ data.url }}</td>
-                    <td>{{ convertToName(data.parentID) }}</td>
+                    <td>{{ data.parentID != null ? convertToName(data.parentID) : ""}}</td>
                     <td><nz-switch [ngModel]="data.isActive" nzCheckedChildren="EN" nzUnCheckedChildren="DIS" (ngModelChange)="switch(data.menuID, 'active', $event)"></nz-switch></td>
                     <td><nz-switch [ngModel]="data.isSubmenu" nzCheckedChildren="EN" nzUnCheckedChildren="DIS" (ngModelChange)="switch(data.menuID, 'submenu', $event)"></nz-switch></td>
-                    <td class="text-center d-flex">
+                    <td>{{ dateFormat(data.createdAt) }}</td>
+                    <td>{{ data.lastUpdatedBy != null ? data.lastUpdatedBy : "" }} <br/> <span class="note">{{ data.lastUpdatedAt != null ? dateTimeFormat(data.lastUpdatedAt) : "" }}</span></td>
+                    <td *ngIf="width > 600">
                         <button class="edit-btn" nz-button nzType="primary" (click)="startEdit(data.menuID)">
                             <span nz-icon nzType="edit" nzTheme="outline"></span>
                         </button>
                         <button class="delete-btn" nz-button nzType="primary" nz-popconfirm
-                            [nzPopconfirmTitle]="'Bạn có muốn xóa ' + '?'" (nzOnCancel)="cancel()"
+                            [nzPopconfirmTitle]="'Bạn có muốn xóa ' + '?'" 
+                            (nzOnConfirm)="confirm(data.menuID)"
+                            (nzOnCancel)="cancel()"
                             nzPopconfirmPlacement="top">
                             <span nz-icon nzType="delete" nzTheme="outline"></span>
                         </button>
                     </td>
+
+                    <td nzRight class="text-center action" *ngIf="width <= 600">
+                        <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomCenter">
+                            <span nz-icon nzType="more" nzTheme="outline"></span>
+                        </a>
+                    </td>
+    
+                    <nz-dropdown-menu #menu="nzDropdownMenu">  
+                        <ul nz-menu>
+                          <li nz-menu-item>
+                            <button class="btn-action" (click)="startEdit(data.menuID)">Sửa</button>
+                          </li>
+                          <li nz-menu-item>
+                            <button class="btn-action" nz-popconfirm
+                            [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.title + '?'"
+                            (nzOnConfirm)="confirm(data.menuID)" nzPopconfirmPlacement="top">Xóa</button>
+                          </li>
+                        </ul>
+                    </nz-dropdown-menu>
+
                 </ng-container>
                 <ng-template #editTemplate>
                     <td>{{ data.menuID }}</td>
@@ -68,6 +94,8 @@
                         </nz-select></td>
                     <td><nz-switch [ngModel]="editCache[data.menuID].data.isActive" nzCheckedChildren="EN" nzUnCheckedChildren="DIS" (ngModelChange)="switchActive(data.menuID)"></nz-switch></td>
                     <td><nz-switch [ngModel]="editCache[data.menuID].data.isSubmenu" nzCheckedChildren="EN" nzUnCheckedChildren="DIS" (ngModelChange)="switchSubmenu(data.menuID)"></nz-switch></td>
+                    <td></td>
+                    <td></td>
                     <td>
                         <a (click)="saveEdit(data.menuID)" class="save">Save</a>
                         <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?"

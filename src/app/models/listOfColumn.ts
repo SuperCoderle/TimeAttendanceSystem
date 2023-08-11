@@ -12,12 +12,27 @@ export var EmployeeColumnList =
         {
             title: 'Ngày sinh',
             compare: (a: Employee, b: Employee) => Number(a.birthday) - Number(b.birthday),
-            priority: 4
+            priority: 5
         },
         {
             title: 'Giới tính',
             compare: (a: Employee, b: Employee) => a.gender.localeCompare(b.gender),
+            priority: 4
+        },
+        {
+            title: 'Liên hệ',
+            compare: (a: Employee, b: Employee) => a.phoneNumber!.localeCompare(b.phoneNumber!),
             priority: 3
+        },
+        {
+            title: 'Ngày tạo',
+            compare: (a: Employee, b: Employee) => Number(a.createdAt) - Number(b.createdAt),
+            priority: 2
+        },
+        {
+            title: 'Cập nhật',
+            compare: (a: Employee, b: Employee) => Number(a.lastUpdatedAt) - Number(b.lastUpdatedAt),
+            priority: 1
         }
     ]
 //Schedule
@@ -39,32 +54,13 @@ export var ShiftColumnList =
             priority: 3
         },
         {
-            title: 'Xác nhận bởi',
+            title: 'Xác nhận',
             compare: (a: Schedule, b: Schedule) => Number(a.approvedAt) - Number(b.approvedAt),
             priority: 2
         },
         {
-            title: 'Được tạo bởi',
+            title: 'Người tạo',
             compare: (a: Schedule, b: Schedule) => Number(a.createdAt) - Number(b.createdAt),
-            priority: 1
-        }
-    ]
-
-    export var ShiftColumnListTablet =
-    [
-        {
-            title: 'Nhân viên',
-            compare: (a: Schedule, b: Schedule) => a.employeeID.localeCompare(b.employeeID),
-            priority: false
-        },
-        {
-            title: 'Ca làm',
-            compare: (a: Schedule, b: Schedule) => a.shiftID - b.shiftID,
-            priority: 2
-        },
-        {
-            title: 'Ngày làm',
-            compare: (a: Schedule, b: Schedule) => Number(a.workDate) - Number(b.workDate),
             priority: 1
         }
     ]
@@ -110,11 +106,21 @@ export var ReportColumnList =
         {
             title: "Tiêu đề",
             compare: (a: Report, b: Report) => a.title.localeCompare(b.title),
-            priority: 3
+            priority: 5
         },
         {
             title: "Tổng lương",
             compare: (a: Report, b: Report) => a.grossPay - b.grossPay,
+            priority: 4
+        },
+        {
+            title: "Giờ làm việc",
+            compare: null,
+            priority: 3
+        },
+        {
+            title: "Vi phạm",
+            compare: null,
             priority: 2
         },
         {
@@ -135,21 +141,31 @@ export var MenuColumnList =
         {
             title: "Url",
             compare: (a: Menu, b: Menu) => a.url.localeCompare(b.url),
-            priority: 4
+            priority: 6
         },
         {
             title: "Trang",
             compare: (a: Menu, b: Menu) => a.parentID - b.parentID,
-            priority: 3
+            priority: 5
         },
         {
             title: "Kích hoạt",
             compare: (a: Menu, b: Menu) => Number(a.isActive) - Number(b.isActive),
-            priority: 2
+            priority: 4
         },
         {
             title: "Mở rộng",
             compare: (a: Menu, b:Menu) => Number(a.isSubmenu) - Number(b.isSubmenu),
+            priority: 3
+        },
+        {
+            title: "Ngày tạo",
+            compare: (a: Menu, b:Menu) => Number(a.createdAt) - Number(b.createdAt),
+            priority: 2
+        },
+        {
+            title: "Cập nhật",
+            compare: (a: Menu, b:Menu) => Number(a.lastUpdatedAt) - Number(b.lastUpdatedAt),
             priority: 1
         }
     ]

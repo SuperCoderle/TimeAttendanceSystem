@@ -1,12 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee, Schedule, Shift } from 'src/app/models/dto';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
-import { ShiftColumnList, ShiftColumnListTablet } from 'src/app/models/listOfColumn';
+import { ShiftColumnList } from 'src/app/models/listOfColumn';
 import * as XLSX from 'xlsx';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
@@ -21,13 +20,11 @@ export class RegisterShiftComponent {
   idEmployee: number = 0;
   title: string = "";
   width = window.innerWidth;
-  listOfColumn = this.width > 600 && this.width <= 1024 ? ShiftColumnListTablet : ShiftColumnList;
+  listOfColumn = ShiftColumnList;
   employees: readonly Employee[] = [];
   schedules: readonly Schedule[] = [];
   shifts: readonly Shift[] = [];
   loading = false;
-  indeterminate = false;
-  listOfCurrentPageData: readonly Schedule[] = [];
   dateFormat(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
   }
@@ -153,8 +150,6 @@ export class RegisterShiftComponent {
                 result.isSubmit = false;
                 break;
             }
-            result.approvedAt = new Date();
-            result.approvedBy = "someone";
             result.isInProgress = false;
             this.approve(result);
             this.nzMessageService.remove(id);
@@ -193,6 +188,12 @@ export class RegisterShiftComponent {
           this.nzMessageService.error('Xóa thất bại');
         }
       })
+  }
+
+  handleReload()
+  {
+    this.schedules = [];
+    this.loadData();
   }
 
   resetForm(e: MouseEvent): void {

@@ -3,11 +3,11 @@
         <h4 class="m-1">Báo cáo</h4>
     </div>
 
-    <div class="d-flex btn-options mt-3">
+    <div class="d-flex btn-options my-3">
 
         <button nz-button nzType="primary" nzDanger nz-dropdown [nzDropdownMenu]="export" class="d-flex align-items-center">
             Xuất
-            <span nz-icon nzType="plus" nzTheme="outline"></span>
+            <span nz-icon nzType="export" nzTheme="outline"></span>
         </button>
         <nz-dropdown-menu #export="nzDropdownMenu">
             <ul nz-menu>
@@ -24,31 +24,34 @@
                 <span nz-icon nzType="reload" nzTheme="outline"></span>
             </button>
 
-            <nz-date-picker nzMode="month" nzAllowClear="false" [(ngModel)]="date"
+            <nz-date-picker class="ms-1" nzMode="month" nzAllowClear="false" [(ngModel)]="date"
                 (ngModelChange)="onChange($event)"></nz-date-picker>
         </div>
 
     </div>
 
-    <nz-table #rowSelectionTable id="table" [nzLoading]="loading" nzShowSizeChanger [nzData]="reports">
+    <nz-table #rowSelectionTable id="table" [nzLoading]="loading" nzShowSizeChanger [nzData]="reports"
+        [nzScroll]="width <= 600 ? { x:'980px'} : width <= 1024 ? { x:'1280px'} : { }"
+    >
         <thead>
             <tr>
-                <th>#</th>
+                <th class="text-center" style="width: 5%">#</th>
                 <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">
                     {{ column.title }}
                 </th>
-                <th style="width: 10%;" class="text-center"></th>
+                <th nzRight [style]="width <= 600 ? 'width: 8%;' : 'width: 10%;'"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let data of rowSelectionTable.data; let i = index">
-                <td>{{ i + 1 }}</td>
+                <td class="text-center">{{ i + 1 }}</td>
                 <td>{{ getEmployeeName(data.employeeID) }}</td>
                 <td>{{ data.title }}</td>
                 <td>{{ data.grossPay | currency: 'VND': 'symbol': '4.0-2' }}</td>
+                <td>{{ totalWorkHours(data.employeeID).total }} giờ</td>
+                <td>{{ totalWorkHours(data.employeeID).violation }} lần</td>
                 <td>{{ data.paidStatus }}</td>
-                <td class="text-center d-flex">
-                    <button nz-button nzType="primary" (click)="open()"><span nz-icon nzType="info-circle" nzTheme="outline"></span></button>
+                <td class="text-center d-flex" *ngIf="width > 600" nzRight>
                     <button class="edit-btn" nz-button nzType="primary" [routerLink]="['/home/employee/employeeform/', data.employeeID]"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
                     <button 
                         class="delete-btn"
@@ -62,47 +65,26 @@
                         <span nz-icon nzType="delete" nzTheme="outline"></span>
                     </button>
                 </td>
+
+                <td nzRight class="text-center action" *ngIf="width <= 600">
+                    <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomCenter">
+                        <span nz-icon nzType="more" nzTheme="outline"></span>
+                    </a>
+                </td>
+
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li nz-menu-item>
+                        <button class="btn-action" [routerLink]="['/home/employee/employeeform/', data.employeeID]">Sửa</button>
+                      </li>
+                      <li nz-menu-item>
+                        <button class="btn-action" nz-popconfirm
+                        [nzPopconfirmTitle]="'Bạn có muốn xóa ' + data.title + '?'"
+                        (nzOnConfirm)="confirm(data.reportID)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="top">Xóa</button>
+                      </li>
+                    </ul>
+                </nz-dropdown-menu>
             </tr>
         </tbody>
     </nz-table>
-
-    <nz-drawer [nzVisible]="visible" [nzWidth]="640" [nzClosable]="false" (nzOnClose)="close()">
-        <ng-container *nzDrawerContent>
-            <p class="title" style=" margin-bottom: 24px;">User Profile</p>
-            <nz-descriptions [nzColumn]="2" nzTitle="Personal">
-                <nz-descriptions-item nzTitle="Full Name" [nzSpan]="1">Lily</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Account" [nzSpan]="1">AntDesign@example.com</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="City" [nzSpan]="1">HangZhou</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Country" [nzSpan]="1">China🇨🇳</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Birthday" [nzSpan]="1">February 2,1900</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Website" [nzSpan]="1">-</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Message" [nzSpan]="2">
-                    Make things as simple as possible but no simpler.
-                </nz-descriptions-item>
-            </nz-descriptions>
-            <nz-divider></nz-divider>
-            <nz-descriptions [nzColumn]="2" nzTitle="Company">
-                <nz-descriptions-item nzTitle="Position" [nzSpan]="1">Programmer</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Responsibilities" [nzSpan]="1">Coding</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Department" [nzSpan]="1">AFX</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Supervisor" [nzSpan]="1">Lin</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Skills" [nzSpan]="2">
-                    C / C + +, data structures, software engineering, operating systems, computer networks, databases,
-                    compiler
-                    theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English,
-                    Java,
-                    ASP, etc.
-                </nz-descriptions-item>
-            </nz-descriptions>
-            <nz-divider></nz-divider>
-            <nz-descriptions [nzColumn]="2" nzTitle="Contacts">
-                <nz-descriptions-item nzTitle="Email" [nzSpan]="1">AntDesign@example.com</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Phone Number" [nzSpan]="1">+86 181 0000 0000</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Github" [nzSpan]="2">
-                    <a href="https://github.com/NG-ZORRO/ng-zorro-antd"
-                        target="_blank">github.com/NG-ZORRO/ng-zorro-antd</a>
-                </nz-descriptions-item>
-            </nz-descriptions>
-        </ng-container>
-    </nz-drawer>
 </div>

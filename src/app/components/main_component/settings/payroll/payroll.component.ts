@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Employee, Payroll } from 'src/app/models/dto';
 import { PayrollColumnList } from 'src/app/models/listOfColumn';
@@ -20,9 +19,8 @@ export class PayrollComponent {
 
   //Declare variables
   loading = false;
-  indeterminate = false;
+  width = window.innerWidth;
   listOfColumn = PayrollColumnList;
-  listOfCurrentPageData: readonly Payroll[] = [];
   payrolls: readonly Payroll[] = [];
   employees: readonly Employee[] = [];
   editCache: { [key: string]: { edit: boolean; data: Payroll } } = {};

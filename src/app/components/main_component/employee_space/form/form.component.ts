@@ -4,7 +4,6 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee, User, Payroll } from 'src/app/models/dto';
 import { v4 as uuid } from 'uuid';
-import jwt_decode from 'jwt-decode';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
@@ -19,44 +18,45 @@ export class FormComponent {
   validateForm: UntypedFormGroup;
   employeeID: string = '';
   title: String = "";
-  token?: string | null = localStorage.getItem("token");
-  user: any;
-  width: number = 1280;
+  width = window.innerWidth;
   isChecked = false;
-  indeterminate = true;
   positions = [
     {
-      name: "HR",
-      basicSalary: 35000000
+      name: "Văn phòng",
+      basicSalary: 35000
     },
     {
-      name: "Fresher",
-      basicSalary: 10000000
+      name: "Kinh doanh",
+      basicSalary: 37000
     },
     {
-      name: "Junior",
-      basicSalary: 25000000
+      name: "Marketing",
+      basicSalary: 42000
     },
     {
-      name: "Senior",
-      basicSalary: 50000000
+      name: "Tài chính / Kế toán",
+      basicSalary: 50000
     },
     {
-      name: "Tech Lead",
-      basicSalary: 85000000
-    }
+      name: "Kỹ thuật",
+      basicSalary: 40000
+    },
+    {
+      name: "Kiểm soát chất lượng",
+      basicSalary: 55000
+    },
+    {
+      name: "Quản lý",
+      basicSalary: 63000
+    },
   ]
   employee: any;
 
   //Constructor
   constructor(private formBuilder: UntypedFormBuilder,
-    private router: Router,
     private activeRoute: ActivatedRoute,
     private useService: UseServiceService,
     private nzMessageService: NzMessageService) {
-    if (this.token != null) {
-      this.user = jwt_decode(this.token);
-    }
 
     this.width = window.innerWidth;
 
@@ -98,7 +98,7 @@ export class FormComponent {
       gender: this.validateForm.controls["gender"].value,
       phoneNumber: this.validateForm.controls["phoneNumber"].value,
       createdAt: new Date,
-      createdBy: this.user["fullname"]
+      createdBy: "someone"
     }
 
     var newUser: User = {
@@ -123,11 +123,12 @@ export class FormComponent {
     await this.useService.postData("TbUsers/", newUser)
       .subscribe({
         next: (result) => {
-          this.createNewEmp(newEmp);
-          this.addToPayroll(newPay);
-          window.history.back();
-          this.nzMessageService.remove(id);
-          this.nzMessageService.success("Tạo thành công");
+          setTimeout(() => {
+            this.createNewEmp(newEmp);
+            this.addToPayroll(newPay);
+            this.nzMessageService.remove(id);
+            this.nzMessageService.success("Tạo thành công");
+          }, 600);
         },
         error: (error: HttpErrorResponse) => {
           this.nzMessageService.remove(id);
@@ -137,8 +138,13 @@ export class FormComponent {
   }
 
   async createNewEmp(newEmp: Employee) {
-    await this.useService.putData(`Employees/${newEmp.employeeID}`, newEmp)
+    await this.useService.postData(`Employees/`, newEmp)
       .subscribe({
+        next: (result) => {
+          setTimeout(() => {
+            window.history.back();
+          }, 600);
+        },
         error: (error: HttpErrorResponse) => {
           console.log(error);
         }
@@ -185,8 +191,6 @@ export class FormComponent {
       phoneNumber: this.validateForm.controls["phoneNumber"].value,
       createdAt: this.employee.createdAt,
       createdBy: this.employee.createdBy,
-      lastUpdatedAt: new Date(),
-      lastUpdatedBy: this.user["fullname"]
     }
 
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;

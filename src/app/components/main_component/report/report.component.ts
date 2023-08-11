@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ReportColumnList } from 'src/app/models/listOfColumn';
-import { Employee, Report } from 'src/app/models/dto';
+import { Employee, Report, Schedule } from 'src/app/models/dto';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as XLSX from 'xlsx'
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
@@ -24,21 +23,13 @@ export class ReportComponent implements OnInit {
 
   //Decalre Variable
   loading = false;
-  indeterminate = false;
+  width = window.innerWidth;
   listOfColumn = ReportColumnList;
-  listOfCurrentPageData: readonly Report[] = [];
   reports: readonly Report[] = [];
+  schedules: readonly Schedule[] = [];
   employees: readonly Employee[] = [];
   date: Date = new Date();
-  visible = false;
 
-  open(): void {
-    this.visible = true;
-  }
-
-  close(): void {
-    this.visible = false;
-  }
   dateFormat(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
   }
@@ -53,28 +44,22 @@ export class ReportComponent implements OnInit {
   async handleLoadData(month: number)
   {
     this.loading = true;
-    await this.useService.getData(`Reports?month=${month}`).subscribe({
-      next: (result) => {
+    await this.useService.getData(`Reports?month=${month}`).subscribe((reports) => {
         setTimeout(() => {
-          this.reports = result;
+          this.reports = reports;
           this.loading = false;
         }, 600);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.loading = false; 
-        console.log(error);
-      }
     });
-    await this.useService.getData("Employees/").subscribe({
-      next: (result) => {
+    await this.useService.getData("Employees/").subscribe((employees) => {
         setTimeout(() => {
-          this.employees = result;
+          this.employees = employees;
         }, 600);
-      },
-      error: (error:HttpErrorResponse) => {
-        console.log(error);
-      }
-    })
+    });
+    await this.useService.getData("Schedules/").subscribe((schedules) => {
+      setTimeout(() => {
+        this.schedules = schedules;
+      }, 600);
+  });
   }
 
   handleReload()
@@ -108,6 +93,18 @@ export class ReportComponent implements OnInit {
     this.handleLoadData(this.date.getMonth() + 1);
   }
 
+  totalWorkHours(id: string): { total: number, violation: number }
+  {
+    let sum = 0, count = 0;
+    this.schedules.filter(x => x.employeeID === id && x.isSubmit).map(value => {
+      sum += value.totalWorkHours;
+      value.violationID != null ? count++ : null;
+    })
+
+    return { total: sum, violation: count};
+  }
+
+
   exportXLSX(): void {
     let elm = document.getElementById('table');
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(elm);
@@ -121,7 +118,7 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.handleLoadData(1);
-    this.date.setMonth(0);
+    this.handleLoadData(new Date().getMonth() + 1);
+    this.date.setMonth(new Date().getMonth());
   }
 }

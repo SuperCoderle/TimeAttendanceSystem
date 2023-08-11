@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Password, Schedule } from 'src/app/models/dto';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 import * as moment from 'moment';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { LoginService } from 'src/app/services/loginService/login.service';
 
 @Component({
   selector: 'app-information',
@@ -17,6 +17,7 @@ export class InformationComponent implements OnInit {
   constructor(private formBuilder: UntypedFormBuilder,
               private nzMessageService: NzMessageService,
               private useService: UseServiceService,
+              private loginService: LoginService
               ) 
   {
     this.validateForm = this.formBuilder.group({
@@ -35,7 +36,7 @@ export class InformationComponent implements OnInit {
   loading = false;
   employee: any = {};
   user: any = {};
-  shedules: Schedule[] = [];
+  schedules: Schedule[] = [];
   payroll: any = {};
   width = window.innerWidth;
   isVisible = false;
@@ -64,7 +65,7 @@ export class InformationComponent implements OnInit {
       .subscribe({
         next: (result) => {
           setTimeout(() => {
-            this.shedules = result;
+            this.schedules = result;
           }, 600);
         },
         error: (error) => {
@@ -123,11 +124,13 @@ export class InformationComponent implements OnInit {
             this.nzMessageService.remove(id);
             this.nzMessageService.success("Đổi mật khẩu thành công. Bạn cần phải đăng nhập lại.");
             this.isVisible = false;
+            this.loginService.logout();
           }, 600);
         },
-        error: (error:HttpErrorResponse) => {
+        error: (error) => {
           this.nzMessageService.remove(id); 
           this.nzMessageService.error(error.error);
+          console.log(error);
         }
       })
   }
@@ -135,7 +138,7 @@ export class InformationComponent implements OnInit {
   totalWorkHours(): { total: number, violation: number }
   {
     let sum = 0, count = 0;
-    this.shedules.map(value => {
+    this.schedules.filter(x => x.isSubmit).map(value => {
       sum += value.totalWorkHours;
       value.violationID != null ? count++ : null;
     })

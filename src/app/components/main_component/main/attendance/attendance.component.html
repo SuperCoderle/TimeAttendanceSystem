@@ -25,9 +25,14 @@
             </nz-timeline>
             <ng-template #time>⏰</ng-template>
 
-            <div class="d-flex justify-content-between align-items-center pb-3">
-                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule != null && schedule.isOpen == false" (click)="check()">Chấm công vào</button>
-                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule != null && schedule.isOpen == false" (click)="check()" nzDanger>Chấm công ra</button>
+            <div class="d-flex justify-content-between align-items-center pb-3" *ngIf="schedule != null">
+                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule.isOpen == false" (click)="check()">Chấm công vào</button>
+                <button nz-button nzType="primary" class="w-50 mx-1" [disabled]="schedule.isOpen == false" (click)="check()" nzDanger>Chấm công ra</button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pb-3" *ngIf="schedule == null">
+                <button nz-button nzType="primary" class="w-50 mx-1" disabled>Chấm công vào</button>
+                <button nz-button nzType="primary" class="w-50 mx-1" disabled nzDanger>Chấm công ra</button>
             </div>
         </nz-card>
         <ng-template #extraTemplate>
