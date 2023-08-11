@@ -13,7 +13,7 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
 export class AttendanceComponent implements OnInit {
   //Constructor
   constructor(private useService: UseServiceService,
-              private nzMessageService: NzMessageService,
+    private nzMessageService: NzMessageService,
   ) { }
   //OnInit method
   ngOnInit(): void {
@@ -53,51 +53,32 @@ export class AttendanceComponent implements OnInit {
       })
   }
 
-  async getToday()
-  {
+  async getToday() {
     await this.useService.getData(`Schedules/Employee`)
-    .subscribe({
-      next: (result) => {
+      .subscribe((schedules) => {
         setTimeout(() => {
           this.loading = false;
-          this.schedules = result;
+          this.schedules = schedules;
         }, 600);
-      },
-      error: (error:HttpErrorResponse) => {
-        this.loading = false; 
-        console.log("GetScheduleByEmployee: " + error);
-      }
-    })
+      })
 
     await this.useService.getData(`Schedules/GetToday`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.schedule = result;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.loading = false; 
-          console.log("GetToday: " + error);
-        }
+      .subscribe((schedule) => {
+        setTimeout(() => {
+          this.schedule = schedule;
+        }, 600);
       })
   }
 
   async check() {
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.putData(`Schedules/${this.schedule.scheduleID}?action=Check`, this.schedule)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.getToday();
-            this.nzMessageService.remove(id);
-            this.nzMessageService.success("Chấm công xong");
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
+      .subscribe(() => {
+        setTimeout(() => {
+          this.getToday();
           this.nzMessageService.remove(id);
-          console.log("Check: " + error);
-        } 
+          this.nzMessageService.success("Chấm công xong");
+        }, 600);
       })
   }
 

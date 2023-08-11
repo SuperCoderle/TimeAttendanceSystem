@@ -62,14 +62,12 @@ export class FormComponent {
 
     this.activeRoute.paramMap.subscribe(params => {
       this.loading = true;
-      if(params.get('id') != null || params.get('id') != undefined)
-      {
+      if (params.get('id') != null || params.get('id') != undefined) {
         this.employeeID = params.get('id')!;
         this.getEmployee(params.get('id')!);
         this.title = "Cập nhật thông tin nhân viên"
       }
-      else
-      {
+      else {
         this.loading = false;
         this.title = "Thêm nhân viên";
       }
@@ -121,64 +119,42 @@ export class FormComponent {
 
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.postData("TbUsers/", newUser)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.createNewEmp(newEmp);
-            this.addToPayroll(newPay);
-            this.nzMessageService.remove(id);
-            this.nzMessageService.success("Tạo thành công");
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
+      .subscribe(() => {
+        setTimeout(() => {
+          this.createNewEmp(newEmp);
+          this.addToPayroll(newPay);
           this.nzMessageService.remove(id);
-          console.log(error);
-        }
+          this.nzMessageService.success("Tạo thành công");
+        }, 600);
       })
   }
 
   async createNewEmp(newEmp: Employee) {
     await this.useService.postData(`Employees/`, newEmp)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            window.history.back();
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          window.history.back();
+        }, 600);
       })
   }
 
   async addToPayroll(newPay: Payroll) {
-    await this.useService.postData("Payrolls/", newPay)
-      .subscribe({
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
-      })
+    await this.useService.postData("Payrolls/", newPay).subscribe();
   }
 
   async getEmployee(empID: string) {
     await this.useService.getData(`Employees/${empID}`)
-      .subscribe({
-        next: (result: Employee) => {
-          setTimeout(() => {
-            this.employee = result;
-            this.validateForm = this.formBuilder.group({
-              fullname: [result.fullname, [Validators.required]],
-              birthday: [result.birthday, Validators.required],
-              gender: [result.gender, [Validators.required]],
-              phoneNumber: [result.phoneNumber, [Validators.required, Validators.maxLength(11)]]
-            });
-            this.loading = false;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
+      .subscribe((employees) => {
+        setTimeout(() => {
+          this.employee = employees;
+          this.validateForm = this.formBuilder.group({
+            fullname: [employees.fullname, [Validators.required]],
+            birthday: [employees.birthday, Validators.required],
+            gender: [employees.gender, [Validators.required]],
+            phoneNumber: [employees.phoneNumber, [Validators.required, Validators.maxLength(11)]]
+          });
           this.loading = false;
-          console.log(error);
-        }
+        }, 600);
       })
   }
 
@@ -195,17 +171,12 @@ export class FormComponent {
 
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.putData(`Employees/${data.employeeID}`, data)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(id);
-            window.history.back();
-            this.nzMessageService.success("Cập nhật thành công.");
-          }, 600);
-        },
-        error: (error) => {
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.remove(id);
+          window.history.back();
+          this.nzMessageService.success("Cập nhật thành công.");
+        }, 600);
       })
   }
 

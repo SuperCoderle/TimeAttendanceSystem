@@ -41,10 +41,10 @@ export class RegisterShiftComponent {
   }
 
   //Constructor
-  constructor(private formBuilder: UntypedFormBuilder,  
-              private nzMessageService: NzMessageService, 
-              private useService: UseServiceService,
-              ) {
+  constructor(private formBuilder: UntypedFormBuilder,
+    private nzMessageService: NzMessageService,
+    private useService: UseServiceService,
+  ) {
 
     this.validateForm = this.formBuilder.group({
       employee: ['', [Validators.required]],
@@ -52,7 +52,7 @@ export class RegisterShiftComponent {
       shift: [0, Validators.required],
       description: [null],
     });
-    
+
     this.idEmployee > 0 ? this.title = "Cập nhật thông tin nhân viên" : this.title = "Đăng ký ca";
     this.loadData();
   }
@@ -80,118 +80,77 @@ export class RegisterShiftComponent {
 
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId
     await this.useService.postData("Schedules/", data)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(id);
-            this.nzMessageService.success('Đăng ký ca thành công');
-            this.loadData();
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
+      .subscribe(() => {
+        setTimeout(() => {
           this.nzMessageService.remove(id);
-          if (error.status == 400) {
-            this.nzMessageService.error(error.error, { nzDuration: 5000 });
-          }
-        }
-      })
+          this.nzMessageService.success('Đăng ký ca thành công');
+          this.loadData();
+        }, 600);
+      });
   }
 
   async loadData() {
     this.loading = true;
     await this.useService.getData("Employees/")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.employees = result;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
-      })
+      .subscribe((employees) => {
+        setTimeout(() => {
+          this.employees = employees;
+        }, 600);
+      });
     await this.useService.getData("Schedules/")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.schedules = result;
-            this.loading = false;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe((schedules) => {
+        setTimeout(() => {
+          this.schedules = schedules;
+          this.loading = false;
+        }, 600);
       })
     await this.useService.getData("Shifts")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.shifts = result;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe((shifts) => {
+        setTimeout(() => {
+          this.shifts = shifts;
+        }, 600);
       })
   }
 
   async confirm(scheduleID: string, action: string) {
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.getData(`Schedules/${scheduleID}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(async () => {
-            switch(action)
-            {
-              case "approve":
-                result.isSubmit = true;
-                break;
-              default:
-                result.isSubmit = false;
-                break;
-            }
-            result.isInProgress = false;
-            this.approve(result);
-            this.nzMessageService.remove(id);
-            this.nzMessageService.success('Đã xong', { nzDuration: 2000 });
-            this.loadData();
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
+      .subscribe((schedule) => {
+        setTimeout(async () => {
+          switch (action) {
+            case "approve":
+              schedule.isSubmit = true;
+              break;
+            default:
+              schedule.isSubmit = false;
+              break;
+          }
+          schedule.isInProgress = false;
+          this.approve(schedule);
           this.nzMessageService.remove(id);
-          console.log(error);
-        }
+          this.nzMessageService.success('Đã xong', { nzDuration: 2000 });
+        }, 600);
       })
     this.loadData();
   }
 
   async approve(sche: Schedule) {
-    await this.useService.putData(`Schedules/${sche.scheduleID}?action=Update`, sche)
-      .subscribe({
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
-      })
+    await this.useService.putData(`Schedules/${sche.scheduleID}?action=Update`, sche).subscribe(() => {
+      this.loadData();
+    });
   }
 
   async delete(scheduleID: string) {
     await this.useService.deleteData(`Schedules/${scheduleID}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.success('Xóa thành công');
-          }, 600);
-          this.loadData();
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-          this.nzMessageService.error('Xóa thất bại');
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.success('Xóa thành công');
+        }, 600);
+        this.loadData();
       })
   }
 
-  handleReload()
-  {
+  handleReload() {
     this.schedules = [];
     this.loadData();
   }
