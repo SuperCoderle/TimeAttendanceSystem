@@ -15,11 +15,10 @@ import { LoginService } from 'src/app/services/loginService/login.service';
 export class InformationComponent implements OnInit {
   //Constructor
   constructor(private formBuilder: UntypedFormBuilder,
-              private nzMessageService: NzMessageService,
-              private useService: UseServiceService,
-              private loginService: LoginService
-              ) 
-  {
+    private nzMessageService: NzMessageService,
+    private useService: UseServiceService,
+    private loginService: LoginService
+  ) {
     this.validateForm = this.formBuilder.group({
       oldPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required]],
@@ -44,73 +43,45 @@ export class InformationComponent implements OnInit {
 
   //Methods
 
-  async getInfomation()
-  {
+  async getInfomation() {
     await this.useService.getData(`TbUsers/Authenticated`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.user = result;
-            this.getEmployee(result.employeeID);
-            this.getPayroll(result.employeeID);
-          }, 600);
-        },
-        error: (error) => {
-          this.loading = false;
-          console.log(error);
-        }
+      .subscribe((user) => {
+        setTimeout(() => {
+          this.user = user;
+          this.getEmployee(user.employeeID);
+          this.getPayroll(user.employeeID);
+        }, 600);
       })
-    
+
     await this.useService.getData(`Schedules/Employee`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.schedules = result;
-          }, 600);
-        },
-        error: (error) => {
-          this.loading = false;
-          console.log(error);
-        }
+      .subscribe((schedules) => {
+        setTimeout(() => {
+          this.schedules = schedules;
+        }, 600);
       })
   }
 
-  async getPayroll(employeeID: string)
-  {
+  async getPayroll(employeeID: string) {
     await this.useService.getData(`Payrolls/Employee?id=${employeeID}`)
-    .subscribe({
-      next: (result) => {
+      .subscribe((payroll) => {
         setTimeout(() => {
           this.loading = false;
-          this.payroll = result;
+          this.payroll = payroll;
         }, 600);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    })
+      })
   }
 
-  async getEmployee(employeeID: string)
-  {
+  async getEmployee(employeeID: string) {
     await this.useService.getData(`Employees/${employeeID}`)
-    .subscribe({
-      next: (result) => {
+      .subscribe((employee) => {
         setTimeout(() => {
           this.loading = false;
-          this.employee = result;
+          this.employee = employee;
         }, 600);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    })
+      })
   }
 
-  async handleOk()
-  {
+  async handleOk() {
     const data: Password = {
       oldPassword: this.validateForm.controls["oldPassword"].value,
       newPassword: this.validateForm.controls["newPassword"].value
@@ -118,32 +89,24 @@ export class InformationComponent implements OnInit {
 
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     await this.useService.putData(`TbUsers/ChangePassword/`, data)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(id);
-            this.nzMessageService.success("Đổi mật khẩu thành công. Bạn cần phải đăng nhập lại.");
-            this.isVisible = false;
-            this.loginService.logout();
-          }, 600);
-        },
-        error: (error) => {
-          this.nzMessageService.remove(id); 
-          this.nzMessageService.error(error.error);
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.remove(id);
+          this.nzMessageService.success("Đổi mật khẩu thành công. Bạn cần phải đăng nhập lại.");
+          this.isVisible = false;
+          this.loginService.logout();
+        }, 600);
       })
   }
 
-  totalWorkHours(): { total: number, violation: number }
-  {
+  totalWorkHours(): { total: number, violation: number } {
     let sum = 0, count = 0;
     this.schedules.filter(x => x.isSubmit).map(value => {
       sum += value.totalWorkHours;
       value.violationID != null ? count++ : null;
     })
 
-    return { total: sum, violation: count};
+    return { total: sum, violation: count };
   }
 
   dateFormat(date: Date): string {

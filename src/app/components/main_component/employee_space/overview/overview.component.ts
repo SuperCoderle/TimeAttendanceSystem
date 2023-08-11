@@ -13,11 +13,11 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
   styleUrls: ['./overview.component.css']
 })
 
-export class OverviewComponent implements OnInit{
+export class OverviewComponent implements OnInit {
 
-  constructor(private useService : UseServiceService, 
-              private nzMessageService:NzMessageService,
-              ) {}
+  constructor(private useService: UseServiceService,
+    private nzMessageService: NzMessageService,
+  ) { }
 
   //Declare variables
   loading = false;
@@ -35,8 +35,7 @@ export class OverviewComponent implements OnInit{
 
   currentFile: any;
 
-  async handleLoadData()
-  {
+  async handleLoadData() {
     this.loading = true;
     await this.useService.getData("Employees/").subscribe((employees) => {
       setTimeout(() => {
@@ -49,42 +48,30 @@ export class OverviewComponent implements OnInit{
 
   async confirm(employeeID: string) {
     await this.useService.deleteData(`Employees/${employeeID}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.success('Xóa thành công');
-          }, 600);
-          this.handleLoadData();
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-          this.nzMessageService.error('Xóa thất bại');
-        }
-      })
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.success('Xóa thành công');
+        }, 600);
+        this.handleLoadData();
+      });
   }
 
   async onFileSelected(event: Event) {
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
-        let file = target.files[0];
-        let formData: FormData = new FormData();
-        formData.append('uploadFile', file, file.name);
-        console.log(typeof(formData));
-        await this.useService.postData("Files/Employee", formData)
-          .subscribe({
-            next: (result) => {
-              setTimeout(() => {
-                this.nzMessageService.remove(id);
-                this.nzMessageService.success("Tải lên thành công.");
-                this.handleLoadData();
-              }, 600);
-            },
-            error: (error: HttpErrorResponse) => {
-              this.nzMessageService.remove(id);
-              console.log(error);
-            }
-          })
+      let file = target.files[0];
+      let formData: FormData = new FormData();
+      formData.append('uploadFile', file, file.name);
+      console.log(typeof (formData));
+      await this.useService.postData("Files/Employee", formData)
+        .subscribe(() => {
+          setTimeout(() => {
+            this.nzMessageService.remove(id);
+            this.nzMessageService.success("Tải lên thành công.");
+            this.handleLoadData();
+          }, 600);
+        })
     }
   }
 
@@ -98,8 +85,7 @@ export class OverviewComponent implements OnInit{
     this.employees = this.employees.filter((item: Employee) => item.fullname.indexOf(this.searchValue) !== -1);
   }
 
-  handleReload()
-  {
+  handleReload() {
     this.employees = [];
     this.handleLoadData();
   }
@@ -113,7 +99,7 @@ export class OverviewComponent implements OnInit{
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(elm);
 
     //Tạo work book và thêm work sheet vào
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại

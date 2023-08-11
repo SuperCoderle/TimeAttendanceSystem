@@ -34,7 +34,7 @@
                     {{ column.title }}
                 </th>
                 <th>Trạng thái</th>
-                <th [nzRight]="width <= 600" style="width: 10%;" class="text-center"></th>
+                <th [nzRight]="width <= 600" [style]="width <= 600 ? 'width: 8%;' : 'width: 12%;'" class="text-center"></th>
             </tr>
         </thead>
         <tbody>
@@ -56,9 +56,6 @@
                 </td>
                 <td *ngIf="width > 600">
                     <div *ngIf="data.isInProgress">
-                        <button nz-button nzType="primary">
-                            <span nz-icon nzType="info-circle" class="text-white" nzTheme="outline"></span>
-                        </button>
                         <button nz-button nzType="primary" nzTooltipTitle="Duyệt" nzTooltipPlacement="top" nz-tooltip
                             (click)="confirm(data.scheduleID, 'approve')">
                             <span class="text-white" nz-icon nzType="check" nzTheme="outline"></span>

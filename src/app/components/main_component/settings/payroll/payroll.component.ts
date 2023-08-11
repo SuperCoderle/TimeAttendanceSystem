@@ -13,9 +13,9 @@ import * as XLSX from 'xlsx';
 })
 
 export class PayrollComponent {
-  constructor( 
-              private nzMessageService: NzMessageService,
-              private useService: UseServiceService) { }
+  constructor(
+    private nzMessageService: NzMessageService,
+    private useService: UseServiceService) { }
 
   //Declare variables
   loading = false;
@@ -31,31 +31,19 @@ export class PayrollComponent {
   //Methods
   async handleLoadData() {
     this.loading = true;
-    await this.useService.getData("Payrolls/").subscribe({
-      next: (result: readonly Payroll[]) => {
-        setTimeout(() => {
-          this.payrolls = result;
-          this.loading = false;
-          this.updateEditCache();
-        }, 600);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.loading = false; 
-        console.log(error);
-      }
+    await this.useService.getData("Payrolls/").subscribe((payrolls) => {
+      setTimeout(() => {
+        this.payrolls = payrolls;
+        this.loading = false;
+        this.updateEditCache();
+      }, 600);
     });
-    await this.useService.getData("Employees/").subscribe({
-      next: (result) => {
-        setTimeout(() => {
-          this.employees = result;
-          this.loading = false;
-          this.updateEditCache();
-        }, 600);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.loading = false; 
-        console.log(error);
-      }
+    await this.useService.getData("Employees/").subscribe((employees) => {
+      setTimeout(() => {
+        this.employees = employees;
+        this.loading = false;
+        this.updateEditCache();
+      }, 600);
     });
   }
 
@@ -70,17 +58,11 @@ export class PayrollComponent {
 
   async confirm(id: number) {
     await this.useService.deleteData(`Payrolls/${id}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.success('Xóa thành công');
-          }, 600);
-          this.handleLoadData();
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-          this.nzMessageService.error('Xóa thất bại');
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.success('Xóa thành công');
+        }, 600);
+        this.handleLoadData();
       })
   }
 
@@ -99,19 +81,12 @@ export class PayrollComponent {
   async saveEdit(id: number) {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     await this.useService.putData(`Payrolls/${this.editCache[id].data.payRollID}`, this.editCache[id].data)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(waiting);
-            this.nzMessageService.success("Cập nhật xong");
-          }, 600);
-          this.handleReload();
-        },
-        error: (error) => {
+      .subscribe(() => {
+        setTimeout(() => {
           this.nzMessageService.remove(waiting);
-          this.nzMessageService.error("Có lỗi xảy ra");
-          console.log(error);
-        }
+          this.nzMessageService.success("Cập nhật xong");
+        }, 600);
+        this.handleReload();
       })
     this.editCache[id].edit = false;
   }
@@ -130,7 +105,7 @@ export class PayrollComponent {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(elm);
 
     //Tạo work book và thêm work sheet vào
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại

@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private nzMessageService: NzMessageService,
     private useService: UseServiceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.handleLoadData();
@@ -32,22 +32,15 @@ export class MenuComponent implements OnInit {
 
   //Methos
 
-  async handleLoadData()
-  {
+  async handleLoadData() {
     this.loading = true;
     await this.useService.getData("Menus/")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.loading = false;
-            this.menus = result;
-            this.updateEditCache(result);
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.loading = false; 
-          console.log(error);
-        }
+      .subscribe((menus) => {
+        setTimeout(() => {
+          this.loading = false;
+          this.menus = menus;
+          this.updateEditCache(menus);
+        }, 600);
       })
   }
 
@@ -66,53 +59,36 @@ export class MenuComponent implements OnInit {
   async saveEdit(id: number) {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     await this.useService.putData(`Menus/${id}`, this.editCache[id].data)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(waiting);
-            this.nzMessageService.success("Sửa thành công");
-            this.handleLoadData();
-          }, 600)
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.remove(waiting);
+          this.nzMessageService.success("Sửa thành công");
+          this.handleLoadData();
+        }, 600)
       });
     this.editCache[id].edit = false;
   }
 
-  async switch(id: number, state: string, value: boolean)
-  {
+  async switch(id: number, state: string, value: boolean) {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     await this.useService.putData(`Menus/${id}/Active?state=${state}&value=${value}`, null)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(waiting);
-            this.handleLoadData();
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.remove(waiting);
+          this.handleLoadData();
+        }, 600);
       })
   }
 
-  async confirm(menuID: number)
-  {
+  async confirm(menuID: number) {
     const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
     await this.useService.deleteData(`Menus/${menuID}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.remove(waiting);
-            this.nzMessageService.success("Xóa thành công");
-            this.handleLoadData();
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.remove(waiting);
+          this.nzMessageService.success("Xóa thành công");
+          this.handleLoadData();
+        }, 600);
       })
   }
 
@@ -125,13 +101,11 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  switchActive(id: number)
-  {
+  switchActive(id: number) {
     this.editCache[id].data.isActive = !this.editCache[id].data.isActive;
   }
 
-  switchSubmenu(id: number)
-  {
+  switchSubmenu(id: number) {
     this.editCache[id].data.isSubmenu = !this.editCache[id].data.isSubmenu;
   }
 
@@ -139,8 +113,7 @@ export class MenuComponent implements OnInit {
     this.editCache[id].data.parentID = value;
   }
 
-  handleReload()
-  {
+  handleReload() {
     this.menus = [];
     this.handleLoadData();
   }
@@ -149,11 +122,10 @@ export class MenuComponent implements OnInit {
     this.nzMessageService.info('Hủy');
   }
 
-  convertToName(id: number)
-  {
+  convertToName(id: number) {
     return id == null ? null : this.menus.find(x => x.menuID === id)?.title;
   }
-  
+
   dateTimeFormat(date: Date): string {
     return moment(date).format("MMM, DD YYYY  LT");
   }
@@ -167,7 +139,7 @@ export class MenuComponent implements OnInit {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(elm);
 
     //Tạo work book và thêm work sheet vào
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại

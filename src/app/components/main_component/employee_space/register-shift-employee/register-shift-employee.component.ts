@@ -25,7 +25,7 @@ export class RegisterShiftEmployeeComponent {
   constructor(private formBuilder: UntypedFormBuilder,
     private nzMessageService: NzMessageService,
     private useService: UseServiceService,
-    ) {
+  ) {
 
     this.validateForm = this.formBuilder.group({
       formArray: this.formBuilder.array([])
@@ -36,8 +36,7 @@ export class RegisterShiftEmployeeComponent {
   }
 
   //Methos
-  get formArray()
-  {
+  get formArray() {
     return this.validateForm.controls["formArray"] as FormArray;
   }
 
@@ -61,47 +60,32 @@ export class RegisterShiftEmployeeComponent {
         createdAt: new Date(),
         createdBy: "someone"
       }
-      
+
       this.post(index + 1, data);
     });
   }
 
-  async post(index: number, data: Schedule)
-  {
+  async post(index: number, data: Schedule) {
     const id = this.nzMessageService.loading("Đợi trong vài giây...", { nzDuration: 0 }).messageId;
 
     await this.useService.postData("Schedules/Employee", data)
-    .subscribe({
-      next: (result) => {
+      .subscribe(() => {
         setTimeout(() => {
-          if(index == this.formArray.length)
-          {
+          if (index == this.formArray.length) {
             this.nzMessageService.success('Đăng ký ca thành công');
             this.loadData();
           }
           this.nzMessageService.remove(id);
         }, 600);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.nzMessageService.remove(id);
-        if (error.status == 400) {
-          this.nzMessageService.error(error.error, { nzDuration: 5000 });
-        }
-      }
-    })
+      })
   }
 
   async loadData() {
     await this.useService.getData("Shifts")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.shifts = result;
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
+      .subscribe((shifts) => {
+        setTimeout(() => {
+          this.shifts = shifts;
+        }, 600);
       })
   }
 

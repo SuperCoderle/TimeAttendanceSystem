@@ -16,9 +16,9 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
 export class ReportComponent implements OnInit {
   //Constructor
   constructor(
-              private nzMessageService: NzMessageService,
-              private useService: UseServiceService) {
-    
+    private nzMessageService: NzMessageService,
+    private useService: UseServiceService) {
+
   }
 
   //Decalre Variable
@@ -41,29 +41,27 @@ export class ReportComponent implements OnInit {
     return fullname;
   }
 
-  async handleLoadData(month: number)
-  {
+  async handleLoadData(month: number) {
     this.loading = true;
     await this.useService.getData(`Reports?month=${month}`).subscribe((reports) => {
-        setTimeout(() => {
-          this.reports = reports;
-          this.loading = false;
-        }, 600);
+      setTimeout(() => {
+        this.reports = reports;
+        this.loading = false;
+      }, 600);
     });
     await this.useService.getData("Employees/").subscribe((employees) => {
-        setTimeout(() => {
-          this.employees = employees;
-        }, 600);
+      setTimeout(() => {
+        this.employees = employees;
+      }, 600);
     });
     await this.useService.getData("Schedules/").subscribe((schedules) => {
       setTimeout(() => {
         this.schedules = schedules;
       }, 600);
-  });
+    });
   }
 
-  handleReload()
-  {
+  handleReload() {
     this.reports = [];
     this.handleLoadData(this.date.getMonth() + 1);
   }
@@ -74,17 +72,11 @@ export class ReportComponent implements OnInit {
 
   async confirm(reportID: number) {
     await this.useService.deleteData(`Reports/${reportID}`)
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.nzMessageService.success('Xóa thành công');
-          }, 600);
-          this.handleLoadData(this.date.getMonth() + 1);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-          this.nzMessageService.error('Xóa thất bại');
-        }
+      .subscribe(() => {
+        setTimeout(() => {
+          this.nzMessageService.success('Xóa thành công');
+        }, 600);
+        this.handleLoadData(this.date.getMonth() + 1);
       })
   }
 
@@ -93,15 +85,14 @@ export class ReportComponent implements OnInit {
     this.handleLoadData(this.date.getMonth() + 1);
   }
 
-  totalWorkHours(id: string): { total: number, violation: number }
-  {
+  totalWorkHours(id: string): { total: number, violation: number } {
     let sum = 0, count = 0;
     this.schedules.filter(x => x.employeeID === id && x.isSubmit).map(value => {
       sum += value.totalWorkHours;
       value.violationID != null ? count++ : null;
     })
 
-    return { total: sum, violation: count};
+    return { total: sum, violation: count };
   }
 
 
@@ -110,7 +101,7 @@ export class ReportComponent implements OnInit {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(elm);
 
     //Tạo work book và thêm work sheet vào
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     //Lưu lại

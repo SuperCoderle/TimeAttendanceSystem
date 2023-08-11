@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import  jwt_decode  from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Menu } from 'src/app/models/dto';
 import { Router } from '@angular/router';
@@ -25,7 +25,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   //Constructor
   constructor(private useService: UseServiceService,
-              private router: Router) {}
+    private router: Router) { }
   ngAfterViewInit(): void {
     this.width = window.innerWidth;
   }
@@ -34,46 +34,36 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   isAdmin(): boolean {
     const token = localStorage.getItem("token");
     let roles: String[] = [];
-    if(token != null)
-    {
+    if (token != null) {
       const decodeValue: any = jwt_decode(token);
-      roles = decodeValue != null && decodeValue != undefined ? decodeValue['roles'] instanceof Array ? decodeValue['roles'] : [decodeValue['roles']] : []; 
-      if(roles.length <= 0)
+      roles = decodeValue != null && decodeValue != undefined ? decodeValue['roles'] instanceof Array ? decodeValue['roles'] : [decodeValue['roles']] : [];
+      if (roles.length <= 0)
         return false;
     }
 
-    return roles.some(x => x == "Administrator"); 
+    return roles.some(x => x == "Administrator");
   }
 
-  parentMenu()
-  {
+  parentMenu() {
     return this.menus.filter(x => x.parentID == null && !x.isSubmenu);
   }
 
-  submenu()
-  {
+  submenu() {
     return this.menus.filter(x => x.isSubmenu);
   }
 
   childMenu(parentID: number): Menu[] {
     return this.menus.filter(x => x.parentID === parentID);
   }
-  
-  async loadData()
-  {
+
+  async loadData() {
     this.loading = true;
     await this.useService.getData("Menus/Authenticate")
-      .subscribe({
-        next: (result) => {
-          setTimeout(() => {
-            this.menus = result;
-            this.loading = false
-          }, 600);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.loading = false; 
-          console.log(error);
-        }
+      .subscribe((menus) => {
+        setTimeout(() => {
+          this.menus = menus;
+          this.loading = false
+        }, 600);
       })
   }
 }
