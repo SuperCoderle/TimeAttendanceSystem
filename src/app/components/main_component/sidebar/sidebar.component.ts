@@ -13,19 +13,12 @@ import { UseServiceService } from 'src/app/services/useService/use-service.servi
 export class SidebarComponent implements OnInit, AfterViewInit {
   //Declare Variables
   loading = false;
-  token?: string | null = localStorage.getItem("token");
-  user: any;
   userRole: String[] = [];
   menus: Menu[] = [];
   width: number = 1280;
 
   //On Init method
   ngOnInit(): void {
-    if(this.token != null)
-    {
-      this.user = jwt_decode(this.token);
-      this.user['roles'] instanceof Array ? this.userRole = this.user['roles'] : this.userRole.push(this.user['roles']);
-    }
     this.width = window.innerWidth;
     this.loadData();
   }
@@ -38,9 +31,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   //Methods
-  isAdmin()
-  {
-    return this.userRole.some(x => x == "Administrator");
+  isAdmin(): boolean {
+    const token = localStorage.getItem("token");
+    let roles: String[] = [];
+    if(token != null)
+    {
+      const decodeValue: any = jwt_decode(token);
+      roles = decodeValue != null && decodeValue != undefined ? decodeValue['roles'] instanceof Array ? decodeValue['roles'] : [decodeValue['roles']] : []; 
+      if(roles.length <= 0)
+        return false;
+    }
+
+    return roles.some(x => x == "Administrator"); 
   }
 
   parentMenu()

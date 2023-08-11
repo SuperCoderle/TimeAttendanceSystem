@@ -15,10 +15,7 @@ import { LoginService } from 'src/app/services/loginService/login.service';
 
 export class LoginComponent {
   //Declare Variables
-  user: any;
-  userRole: String[] = [];
   show: boolean = false;
-  show1: boolean = false;
   loading: boolean = false;
 
   form = this.formBuilder.group({

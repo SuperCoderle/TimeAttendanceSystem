@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subject } from 'rxjs';
 import { Violation } from 'src/app/models/dto';
 import { ViolationColumnList } from 'src/app/models/listOfColumn';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
@@ -19,9 +18,8 @@ export class ViolationComponent {
 
   //Declare variables
   loading = false;
-  indeterminate = false;
+  width = window.innerWidth;
   listOfColumn = ViolationColumnList;
-  listOfCurrentPageData: readonly Violation[] = [];
   violations: readonly Violation[] = [];
   editCache: { [key: string]: { edit: boolean; data: Violation } } = {};
 
@@ -121,5 +119,7 @@ export class ViolationComponent {
     XLSX.writeFile(wb, 'Lỗi.xlsx');
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.handleLoadData();
+  }
 }

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Menu } from 'src/app/models/dto';
 import { MenuColumnList } from 'src/app/models/listOfColumn';
@@ -25,12 +25,10 @@ export class MenuComponent implements OnInit {
 
   //Decalre Variable
   loading = false;
-  indeterminate = false;
+  width = window.innerWidth;
   editCache: { [key: string]: { edit: boolean; data: Menu } } = {};
   listOfColumn = MenuColumnList;
-  listOfCurrentPageData: readonly Menu[] = [];
   menus: readonly Menu[] = [];
-  visible = false;
 
   //Methos
 
@@ -100,6 +98,24 @@ export class MenuComponent implements OnInit {
       })
   }
 
+  async confirm(menuID: number)
+  {
+    const waiting = this.nzMessageService.loading('Chờ vài giây..', { nzDuration: 0 }).messageId;
+    await this.useService.deleteData(`Menus/${menuID}`)
+      .subscribe({
+        next: (result) => {
+          setTimeout(() => {
+            this.nzMessageService.remove(waiting);
+            this.nzMessageService.success("Xóa thành công");
+            this.handleLoadData();
+          }, 600);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        }
+      })
+  }
+
   updateEditCache(menus: Menu[]): void {
     this.menus.forEach(item => {
       this.editCache[item.menuID] = {
@@ -136,6 +152,14 @@ export class MenuComponent implements OnInit {
   convertToName(id: number)
   {
     return id == null ? null : this.menus.find(x => x.menuID === id)?.title;
+  }
+  
+  dateTimeFormat(date: Date): string {
+    return moment(date).format("MMM, DD YYYY  LT");
+  }
+
+  dateFormat(date: Date): string {
+    return moment(date).format("DD-MM-YYYY");
   }
 
   exportXLSX(): void {

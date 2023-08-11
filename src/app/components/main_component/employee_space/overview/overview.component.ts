@@ -1,9 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Injectable, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Employee } from 'src/app/models/dto';
+import { Employee, Payroll, Schedule, User } from 'src/app/models/dto';
 import { EmployeeColumnList } from 'src/app/models/listOfColumn';
 import * as XLSX from 'xlsx';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
@@ -22,11 +21,10 @@ export class OverviewComponent implements OnInit{
 
   //Declare variables
   loading = false;
-  indeterminate = false;
   visible = false;
+  searchValue = '';
   width = window.innerWidth;
   listOfColumn = EmployeeColumnList;
-  listOfCurrentPageData: readonly Employee[] = [];
   employees: readonly Employee[] = [];
   dateFormat(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
@@ -40,17 +38,12 @@ export class OverviewComponent implements OnInit{
   async handleLoadData()
   {
     this.loading = true;
-    await this.useService.getData("Employees/").subscribe({
-      next: (result) => {
-        setTimeout(() => {
-          this.employees = result;
-          this.loading = false;
-        }, 600);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.loading = false; 
-        console.log(error);
-      }
+    await this.useService.getData("Employees/").subscribe((employees) => {
+      setTimeout(() => {
+        this.loading = false;
+        this.employees = employees;;
+      })
+
     });
   }
 
@@ -95,6 +88,16 @@ export class OverviewComponent implements OnInit{
     }
   }
 
+  reset(): void {
+    this.searchValue = '';
+    this.handleLoadData();
+  }
+
+  search(): void {
+    this.visible = false;
+    this.employees = this.employees.filter((item: Employee) => item.fullname.indexOf(this.searchValue) !== -1);
+  }
+
   handleReload()
   {
     this.employees = [];
@@ -103,14 +106,6 @@ export class OverviewComponent implements OnInit{
 
   cancel(): void {
     this.nzMessageService.info('Hủy');
-  }
-
-  open(): void {
-    this.visible = true;
-  }
-
-  close(): void {
-    this.visible = false;
   }
 
   exportXLSX(): void {

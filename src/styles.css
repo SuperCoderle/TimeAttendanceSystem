@@ -91,32 +91,175 @@ input[type="search"]::-webkit-search-results-decoration {
     border-color: #e1c5c5;
 }
 
-table {
+.body .view .view-btn {
+    right: 0%;
+    top: 10%;
+    transform: translate(0%, -54%);
+}
+
+.body .view .view-btn button {
+    background: white;
+    border: 1px solid rgba(9, 9, 9, 0.159);
+    padding: 0.4rem;
+    margin: 1px;
+    width: 6rem;
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 999;
+}
+
+.body .view .view-btn button.active {
+    color: #1890ff;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.body .dynamic-delete-button {
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+    font-size: 24px;
+    color: #999;
+    transition: all 0.3s;
+}
+
+.body .dynamic-delete-button:hover {
+    color: #777;
+}
+
+.body .passenger-input {
+    width: 90%;
+    margin-right: 8px;
+}
+
+/* Table design */
+
+.body #table {
     table-layout: fixed;
+}
+
+.body #table tr > td:not(:last-child) {
+    padding: 12px !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.body #table tr td button {
+    margin-left: 8px;
+    border: none;
+}
+
+.body #table .phone-select {
+    width: 70px;
+}
+
+.body #table td .status {
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid;
+    padding: 0.3rem 0.7rem;
+    color: rgb(53, 139, 252);
+}
+
+.body #table .remove-button {
+    display: none;
+}
+
+.body #table .add-button {
+    width: 40%;
+}
+
+.body #table .edit-btn {
+    background: var(--edit-color);
+}
+
+.body #table .delete-btn {
+    background: var(--delete-color);
 }
 
 
 
+.body #table td .note {
+    font-size: 11px;
+    color: rgba(235, 42, 42, 0.837);
+}
+
+.body #table td .status {
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid;
+    display: block;
+    width: 6rem;
+    padding: 0.3rem 0;
+    color: rgb(53, 139, 252);
+}
+
+.body #table .submitted {
+    color: white !important;
+    background-color: rgb(220 87 0 / 87%);
+}
+
+.body #table .rejected {
+    background-color: #0070c9;
+    color: white !important;
+}
+
+/* Table design */
+
 @media screen and (max-width: 1024px) {
     .body #table tr th, .body #table tr td {
         font-size: 0.8rem !important;
-    }
-
-    tr > td:not(:last-child) {
-        padding: 12px !important;
-        max-width: 7rem;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .cdk-overlay-pane {
-        width: 20% !important;
     }
 }
 
 @media screen and (max-width: 600px) {
     .body {
         margin: 0 0.5rem;
+    }
+
+    .btn-action {
+        background: transparent !important;
+        color: #1890ff !important;
+        border: none;
+    }
+
+    .body .passenger-input {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .body .dynamic-delete-button {
+        display: none;
+    }
+
+    .body #table .remove-button, .add-button {
+        display: block;
+        width: 100%;
+    }
+
+    .body .view {
+        display: none;
+    }
+
+    .body nz-menu li button {
+        background: transparent !important;
+        color: #1890ff !important;
+    }
+
+    .body .btn-options button span:first-child {
+        display: none;
+    }
+
+    .body .btn-options button span:last-child {
+        margin: 0 !important;
     }
 }

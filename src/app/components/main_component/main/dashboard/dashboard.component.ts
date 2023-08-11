@@ -8,8 +8,10 @@ Chart.register(...registerables);
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  ngOnInit(): void {
 
+  width = window.innerWidth;
+
+  ngOnInit(): void {
       const myChart = new Chart("myChart", {
         type: 'line',
         data: {

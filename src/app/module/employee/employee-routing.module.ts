@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeeComponent } from './employee.component';
 import { OverviewComponent } from 'src/app/components/main_component/employee_space/overview/overview.component';
-import { SalaryComponent } from 'src/app/components/main_component/employee_space/salary/salary.component';
 import { FormComponent } from 'src/app/components/main_component/employee_space/form/form.component';
 import { RegisterShiftComponent } from 'src/app/components/main_component/employee_space/register-shift/register-shift.component';
 import { RegisterShiftEmployeeComponent } from 'src/app/components/main_component/employee_space/register-shift-employee/register-shift-employee.component';
@@ -15,10 +14,6 @@ const routes: Routes = [
       {
         path: 'overview',
         component: OverviewComponent
-      },
-      {
-        path: 'salary',
-        component: SalaryComponent
       },
       {
         path: 'employeeform',

@@ -1,68 +1,17 @@
-.view .view-btn {
-    right: 0%;
-    top: 10%;
-    transform: translate(0%, -54%);
+.search-box {
+    padding: 8px;
 }
 
-.view .view-btn button {
-    background: white;
-    border: 1px solid rgba(9, 9, 9, 0.159);
-    padding: 0.4rem;
-    margin: 1px;
-    width: 6rem;
-    border-bottom: 0px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    z-index: 999;
+.search-box input {
+    width: 188px;
+    margin-bottom: 8px;
+    display: block;
 }
 
-.view .view-btn button.active {
-    color: #1890ff;
+.search-box button {
+    width: 90px;
 }
 
-button {
-    border: none;
-}
-
-.menu li:hover {
-    background: transparent;
-}
-
-.menu {
-    transform: translateX(-25%);
-}
-
-.edit-btn {
-    background: var(--edit-color);
-}
-
-.delete-btn {
-    background: var(--delete-color);
-}
-
-.table-mobile {
-    display: none;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.custom-file-upload {
-    display: inline-block;
-    cursor: pointer;
-}
-
-@media screen and (max-width: 600px) {
-    .view {
-        display: none;
-    }
-
-    .table-mobile {
-        display: block;
-    }
-
-    .table-mobile button {
-        background: transparent;
-    }
+.search-button {
+    margin-right: 8px;
 }

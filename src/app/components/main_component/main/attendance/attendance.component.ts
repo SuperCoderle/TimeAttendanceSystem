@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Schedule, Shift } from 'src/app/models/dto';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as moment from 'moment';
-import { Router } from '@angular/router';
 import { UseServiceService } from 'src/app/services/useService/use-service.service';
 
 @Component({

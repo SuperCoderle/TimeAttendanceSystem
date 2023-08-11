@@ -31,9 +31,8 @@ export class TokenInterceptorService implements HttpInterceptor {
           break;
       }
 
-      const error = (err && err.error && err.error.message) || err.statusText;
       console.log(err);
-      return throwError(error);
+      return throwError(err);
     }));
   }
 
